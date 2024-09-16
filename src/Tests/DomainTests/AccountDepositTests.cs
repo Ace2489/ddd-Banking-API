@@ -14,7 +14,7 @@ public class AccountDepositTests
         //arrange
         decimal negativeDeposit = -1000m;
         User testUser = new(Guid.NewGuid(), "first", "last", "email@email", "23456", new DateTime(2003, 12, 10));
-        Account account = new(Guid.NewGuid(), testUser.Id, "22345", AccountType.Savings);
+        Account account = new(Guid.NewGuid(), testUser.Id, "22345", AccountType.Savings, new Money(1000m));
 
         //act
         Result<Account> result = account.Deposit(new Money(negativeDeposit), DateTimeOffset.UtcNow);
@@ -29,7 +29,7 @@ public class AccountDepositTests
     {
         Money positiveDeposit = new(1000m);
         Guid userId = Guid.NewGuid();
-        Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings);
+        Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings, new Money(1000m));
         Money initialBalance = account.Balance;
         Money finalBalance = initialBalance + positiveDeposit;
 
@@ -44,7 +44,7 @@ public class AccountDepositTests
     {
         Guid userId = Guid.NewGuid();
         string accountNumber = "123456789";
-        Account account = new(Guid.NewGuid(), userId, accountNumber, AccountType.Savings);
+        Account account = new(Guid.NewGuid(), userId, accountNumber, AccountType.Savings, new Money(0));
         TransactionType transactionType = TransactionType.Deposit;
         DateTimeOffset transactionTime = DateTime.Now;
         var depositAmount = new Money(100m);

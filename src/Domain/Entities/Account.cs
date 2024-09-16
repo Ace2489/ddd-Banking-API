@@ -1,25 +1,42 @@
-﻿using Domain.Enums;
+﻿using System.Text.Json;
+using Domain.Enums;
 using Domain.Errors;
 using Domain.Shared;
 using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
-
-public class Account(Guid Id, Guid userId, string accountNumber, AccountType accountType) : Entity(Id)
+public class Account : Entity
 {
     private readonly List<Transaction> _transactions = [];
-    public Guid UserId { get; } = userId;
-    public string AccountNumber { get; } = accountNumber;
-    public AccountType Type { get; private set; } = accountType;
-    public Money Balance { get; private set; } = new Money(0);
-    public DateTimeOffset DateOpened { get; } = DateTimeOffset.UtcNow;
+
+    //For EF Core
+    private Account() { }
+    public Account(Guid id, Guid userId, string accountNumber, AccountType accountType, Money initialBalance)
+        : base(id)
+    {
+        UserId = userId;
+        AccountNumber = accountNumber;
+        Type = accountType;
+        Balance = initialBalance;
+        DateOpened = DateTimeOffset.UtcNow;
+    }
+
+    public Guid UserId { get; private set; }
+    public string AccountNumber { get; private set; } = null!;
+    public AccountType Type { get; private set; }
+    public Money Balance { get; private set; } = null!;
+    public DateTimeOffset DateOpened { get; private set; }
+
     public List<Transaction> Transactions => [.. _transactions];
+
     public Result<Account> Deposit(Money deposit, DateTimeOffset transactionTime)
     {
         if (deposit.Amount < 0) return DomainErrors.Account.InvalidDepositAmountError;
+        
         Balance += deposit;
         _transactions.Add(new(Guid.NewGuid(), Id, deposit, null, transactionTime, TransactionType.Deposit));
-        return this;
+
+        return Result<Account>.Success(this);
     }
 }

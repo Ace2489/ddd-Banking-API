@@ -1,8 +1,13 @@
 ﻿namespace Domain;
 
-public abstract class Entity(Guid Id)
+public abstract class Entity
 {
-    public Guid Id { get; } = Id;
+    protected Entity() {}
+    protected Entity(Guid Id)
+    {
+        this.Id = Id;
+    }
+    public Guid Id { get; }
 
     public static bool operator ==(Entity? entityA, Entity? entityB)
     {

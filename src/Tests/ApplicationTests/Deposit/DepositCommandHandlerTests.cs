@@ -19,7 +19,7 @@ public class DepositCommandHandlerTests
         var depositAmount = new Money(1000);
         var accountNumber = "12345";
 
-        var account = new Account(accountId, userId, accountNumber, AccountType.Savings);
+        var account = new Account(accountId, userId, accountNumber, AccountType.Savings, new Money(1000m));
         var depositCommand = new DepositCommand(accountId, depositAmount);
         var accountRepository = Substitute.For<IAccountRepository>();
         accountRepository.Get(accountId).Returns(account);
@@ -31,7 +31,7 @@ public class DepositCommandHandlerTests
         result.Value.Should().NotBeNull();
         result.Error.Should().BeNull();
     }
-
+ 
     [Fact]
     public async Task Handle_WithNonExistentAccount_ShouldFail()
     {
@@ -43,6 +43,7 @@ public class DepositCommandHandlerTests
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
+
         result.Value.Should().BeNull();
         result.Error!.Code.Should().Be(ApplicationErrors.DepositErrors.AccountNotFoundError.Code);
     }
