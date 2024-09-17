@@ -14,18 +14,18 @@ public class AccountConfiguration() : IEntityTypeConfiguration<Account>
         builder.HasKey(a => a.Id);
 
         builder.HasIndex(a => a.AccountNumber).IsUnique();
-        
+
         builder.Property(a => a.AccountNumber).HasMaxLength(100);
-        
+
         builder.Property(a => a.Balance).HasConversion(
-            money => money.Amount,
-            amount => new Domain.ValueObjects.Money(amount));
+            money => money.Value,
+            amount => Domain.ValueObjects.Money.Create(amount).Value!);
 
         builder.HasOne<User>()
         .WithMany()
         .HasForeignKey(a => a.UserId)
         .IsRequired();
-        
+
         builder.HasMany(a => a.Transactions)
         .WithOne()
         .HasForeignKey(t => t.AccountId);

@@ -16,35 +16,40 @@ public class DepositCommandHandlerTests
     {
         var accountId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var depositAmount = new Money(1000);
+        var depositAmount = Money.Create(1000m).Value!;
         var accountNumber = "12345";
 
-        var account = new Account(accountId, userId, accountNumber, AccountType.Savings, new Money(1000m));
+        var account = new Account(accountId, userId, accountNumber, AccountType.Savings, Money.Create(1000m).Value!);
         var depositCommand = new DepositCommand(accountId, depositAmount);
         var accountRepository = Substitute.For<IAccountRepository>();
         accountRepository.Get(accountId).Returns(account);
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync().Returns(1);
 
-        var depositCommandHandler = new DepositCommandHandler(accountRepository);
+        var depositCommandHandler = new DepositCommandHandler(accountRepository, unitOfWork);
         var result = await depositCommandHandler.Handle(depositCommand, default);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
         result.Error.Should().BeNull();
+        await unitOfWork.Received(1).SaveChangesAsync();
     }
- 
+
     [Fact]
     public async Task Handle_WithNonExistentAccount_ShouldFail()
     {
         var accountId = Guid.NewGuid();
         var repository = Substitute.For<IAccountRepository>();
-        var handler = new DepositCommandHandler(repository);
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        var handler = new DepositCommandHandler(repository, unitOfWork);
         repository.Get(accountId).Returns((Account)null!);
-        var result = await handler.Handle(new DepositCommand(accountId, new Money(20m)), default);
+        var result = await handler.Handle(new DepositCommand(accountId, Money.Create(1000m).Value!), default);
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
 
         result.Value.Should().BeNull();
         result.Error!.Code.Should().Be(ApplicationErrors.DepositErrors.AccountNotFoundError.Code);
+        await unitOfWork.DidNotReceive().SaveChangesAsync();
     }
 }

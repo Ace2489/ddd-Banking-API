@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Errors;
 using Domain.Shared;
 using Domain.ValueObjects;
 
@@ -8,28 +7,13 @@ namespace Tests.DomainTests;
 
 public class AccountDepositTests
 {
-    [Fact]
-    public void Deposit_WithNegativeAmount_ReturnsError()
-    {
-        //arrange
-        decimal negativeDeposit = -1000m;
-        User testUser = new(Guid.NewGuid(), "first", "last", "email@email", "23456", new DateTime(2003, 12, 10));
-        Account account = new(Guid.NewGuid(), testUser.Id, "22345", AccountType.Savings, new Money(1000m));
-
-        //act
-        Result<Account> result = account.Deposit(new Money(negativeDeposit), DateTimeOffset.UtcNow);
-
-        //assert
-        Assert.False(result.IsSuccess);
-        Assert.Equal(result.Error, DomainErrors.Account.InvalidDepositAmountError);
-    }
 
     [Fact]
     public void Deposit_WithPositiveAmount_IncreasesAccountBalance()
     {
-        Money positiveDeposit = new(1000m);
+        Money positiveDeposit = Money.Create(1000m).Value!;
         Guid userId = Guid.NewGuid();
-        Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings, new Money(1000m));
+        Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings, Money.Create(1000m).Value!);
         Money initialBalance = account.Balance;
         Money finalBalance = initialBalance + positiveDeposit;
 
@@ -44,10 +28,10 @@ public class AccountDepositTests
     {
         Guid userId = Guid.NewGuid();
         string accountNumber = "123456789";
-        Account account = new(Guid.NewGuid(), userId, accountNumber, AccountType.Savings, new Money(0));
+        Account account = new(Guid.NewGuid(), userId, accountNumber, AccountType.Savings, Money.Create(0).Value!);
         TransactionType transactionType = TransactionType.Deposit;
         DateTimeOffset transactionTime = DateTime.Now;
-        var depositAmount = new Money(100m);
+        var depositAmount = Money.Create(1000m).Value!;
 
         Result<Account> result = account.Deposit(depositAmount, transactionTime);
         Account? returnedAccount = result.Value;

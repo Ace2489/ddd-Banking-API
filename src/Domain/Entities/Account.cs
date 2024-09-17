@@ -32,7 +32,7 @@ public class Account : Entity
 
     public Result<Account> Deposit(Money deposit, DateTimeOffset transactionTime)
     {
-        if (deposit.Amount < 0) return DomainErrors.Account.InvalidDepositAmountError;
+        if (deposit.Value < 0) return DomainErrors.Account.InvalidDepositAmountError;
         
         Balance += deposit;
         _transactions.Add(new(Guid.NewGuid(), Id, deposit, null, transactionTime, TransactionType.Deposit));

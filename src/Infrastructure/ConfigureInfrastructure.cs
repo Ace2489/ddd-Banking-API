@@ -1,4 +1,5 @@
-﻿using Domain.Repository;
+﻿using Application;
+using Domain.Repository;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ public static class Configure
         services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(connectionString));
 
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }
 }

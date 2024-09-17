@@ -17,7 +17,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasIndex(t => t.TransactionType);
 
         builder.Property(t => t.Amount).HasConversion(
-            money => money.Amount,
-            amount => new Domain.ValueObjects.Money(amount));
+            money => money.Value,
+            amount => Domain.ValueObjects.Money.Create(amount).Value!);
     }
 }

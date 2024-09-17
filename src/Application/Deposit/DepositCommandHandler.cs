@@ -7,9 +7,10 @@ using MediatR;
 
 namespace Application.Deposit;
 
-public class DepositCommandHandler(IAccountRepository accountRepository) : IRequestHandler<DepositCommand, Result<Account>>
+public class DepositCommandHandler(IAccountRepository accountRepository, IUnitOfWork unitOfWork) : IRequestHandler<DepositCommand, Result<Account>>
 {
     private readonly IAccountRepository accountRepository = accountRepository;
+    private readonly IUnitOfWork unitOfWork = unitOfWork;
 
     public async Task<Result<Account>> Handle(DepositCommand request, CancellationToken cancellationToken)
     {
@@ -17,7 +18,9 @@ public class DepositCommandHandler(IAccountRepository accountRepository) : IRequ
 
         if (account is null) return ApplicationErrors.DepositErrors.AccountNotFoundError;
 
-        return account.Deposit(request.Amount, DateTimeOffset.UtcNow);
+        Result<Account> depositResult = account.Deposit(request.Amount, DateTimeOffset.UtcNow);
 
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        return depositResult;
     }
 }
