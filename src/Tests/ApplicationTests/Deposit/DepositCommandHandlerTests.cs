@@ -20,9 +20,9 @@ public class DepositCommandHandlerTests
         var accountNumber = "12345";
 
         var account = new Account(accountId, userId, accountNumber, AccountType.Savings, Money.Create(1000m).Value!);
-        var depositCommand = new DepositCommand(accountId, depositAmount);
+        DepositCommand depositCommand = DepositCommand.Create(accountId, depositAmount);
         var accountRepository = Substitute.For<IAccountRepository>();
-        accountRepository.Get(accountId).Returns(account);
+        accountRepository.GetAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
@@ -42,8 +42,8 @@ public class DepositCommandHandlerTests
         var repository = Substitute.For<IAccountRepository>();
         var unitOfWork = Substitute.For<IUnitOfWork>();
         var handler = new DepositCommandHandler(repository, unitOfWork);
-        repository.Get(accountId).Returns((Account)null!);
-        var result = await handler.Handle(new DepositCommand(accountId, Money.Create(1000m).Value!), default);
+        repository.GetAsync(accountId).Returns((Account)null!);
+        var result = await handler.Handle(DepositCommand.Create(accountId, Money.Create(1000m).Value!), default);
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Repository;
@@ -14,7 +13,7 @@ public class DepositCommandHandler(IAccountRepository accountRepository, IUnitOf
 
     public async Task<Result<Account>> Handle(DepositCommand request, CancellationToken cancellationToken)
     {
-        Account? account = await accountRepository.Get(request.AccountId, cancellationToken);
+        Account? account = await accountRepository.GetAsync(request.AccountId, cancellationToken);
 
         if (account is null) return ApplicationErrors.DepositErrors.AccountNotFoundError;
 

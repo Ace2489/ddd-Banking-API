@@ -8,7 +8,7 @@ public class Transaction : Entity
 {
     //For EF Core
     private Transaction() { }
-    public Transaction(Guid Id, Guid accountId, Money amount, string? description, DateTimeOffset transactionTimestamp, TransactionType transactionType, Guid? referenceId = null) : base(Id)
+    public Transaction( Guid accountId, Money amount, string? description, DateTimeOffset transactionTimestamp, TransactionType transactionType, Guid? referenceId = null)
     {
         AccountId = accountId;
         Amount = amount;

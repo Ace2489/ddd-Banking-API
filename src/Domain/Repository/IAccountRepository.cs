@@ -4,5 +4,5 @@ namespace Domain.Repository;
 
 public interface IAccountRepository
 {
-    public Task<Account?> Get(Guid id, CancellationToken cancellationToken = default);
+    public Task<Account?> GetAsync(Guid id, CancellationToken cancellationToken = default);
 }

@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using Domain.Enums;
-using Domain.Errors;
+﻿using Domain.Enums;
 using Domain.Shared;
 using Domain.ValueObjects;
 
@@ -32,11 +30,9 @@ public class Account : Entity
 
     public Result<Account> Deposit(Money deposit, DateTimeOffset transactionTime)
     {
-        if (deposit.Value < 0) return DomainErrors.Account.InvalidDepositAmountError;
-        
         Balance += deposit;
-        _transactions.Add(new(Guid.NewGuid(), Id, deposit, null, transactionTime, TransactionType.Deposit));
-
+        _transactions.Add(new(Id, deposit, null, transactionTime, TransactionType.Deposit));
+        
         return Result<Account>.Success(this);
     }
 }
