@@ -3,7 +3,7 @@ using Domain.Shared;
 using Domain.ValueObjects;
 using MediatR;
 
-namespace Application;
+namespace Application.Features.Deposit;
 
 public record DepositCommand : IRequest<Result<Account>>
 {

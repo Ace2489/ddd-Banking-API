@@ -1,5 +1,5 @@
 using Application;
-using Application.Deposit;
+using Application.Features.Deposit;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
@@ -30,7 +30,7 @@ public class DepositCommandHandlerTests
         var result = await depositCommandHandler.Handle(depositCommand, default);
 
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().NotBeNull();
+        result.Value.Should().Be(account);
         result.Error.Should().BeNull();
         await unitOfWork.Received(1).SaveChangesAsync();
     }
@@ -43,13 +43,11 @@ public class DepositCommandHandlerTests
         var unitOfWork = Substitute.For<IUnitOfWork>();
         var handler = new DepositCommandHandler(repository, unitOfWork);
         repository.GetAsync(accountId).Returns((Account)null!);
+
         var result = await handler.Handle(DepositCommand.Create(accountId, Money.Create(1000m).Value!), default);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().NotBeNull();
-
-        result.Value.Should().BeNull();
-        result.Error!.Code.Should().Be(ApplicationErrors.DepositErrors.AccountNotFoundError.Code);
+        result.Error!.Should().Be(ApplicationErrors.AccountNotFoundError);
         await unitOfWork.DidNotReceive().SaveChangesAsync();
     }
 }

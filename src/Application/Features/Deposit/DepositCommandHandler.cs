@@ -4,7 +4,7 @@ using Domain.Repository;
 using Domain.Shared;
 using MediatR;
 
-namespace Application.Deposit;
+namespace Application.Features.Deposit;
 
 public class DepositCommandHandler(IAccountRepository accountRepository, IUnitOfWork unitOfWork) : IRequestHandler<DepositCommand, Result<Account>>
 {
@@ -15,7 +15,7 @@ public class DepositCommandHandler(IAccountRepository accountRepository, IUnitOf
     {
         Account? account = await accountRepository.GetAsync(request.AccountId, cancellationToken);
 
-        if (account is null) return ApplicationErrors.DepositErrors.AccountNotFoundError;
+        if (account is null) return ApplicationErrors.AccountNotFoundError;
 
         Result<Account> depositResult = account.Deposit(request.Amount, DateTimeOffset.UtcNow);
 

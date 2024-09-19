@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Errors;
 using Domain.Shared;
 using Domain.ValueObjects;
 
@@ -32,7 +33,17 @@ public class Account : Entity
     {
         Balance += deposit;
         _transactions.Add(new(Id, deposit, null, transactionTime, TransactionType.Deposit));
-        
+
         return Result<Account>.Success(this);
+    }
+
+    public Result<Account> Withdraw(Money amount, DateTimeOffset transactionTime)
+    {
+        if (Balance < amount) return DomainErrors.Account.InsufficientFundsError;
+
+        Balance = Money.Subtract(Balance, amount).Value!;
+        Transaction transaction = new(Id, amount, null, transactionTime, TransactionType.Withdrawal);
+        _transactions.Add(transaction);
+        return this;
     }
 }

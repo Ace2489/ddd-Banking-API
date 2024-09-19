@@ -1,7 +1,7 @@
 
 namespace Domain.Shared;
 
-public class Result<T> : Result
+public record Result<T> : Result
 {
     protected private Result(bool isSuccess, T? value, Error? error = null) : base(isSuccess, error)
     {
@@ -14,6 +14,5 @@ public class Result<T> : Result
 
     public static implicit operator Result<T>(Error error) => Failure(error);
 
-    public static implicit operator Result<T>(T value) => Success(value);
-
+    public static implicit operator Result<T>(T value)  => Success(value);
 }

@@ -1,6 +1,6 @@
 namespace Domain.Shared;
 
-public class Result
+public record Result
 {
     protected private Result(bool isSuccess, Error? error = null)
     {
@@ -9,6 +9,7 @@ public class Result
     }
     public bool IsSuccess { get; }
 
+    public bool IsFailure => !IsSuccess;
     public Error? Error { get; }
 
     public static Result Success => new(true);

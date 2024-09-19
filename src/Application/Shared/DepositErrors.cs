@@ -4,8 +4,6 @@ namespace Application.Shared;
 
 public static class ApplicationErrors
 {
-    public static class DepositErrors
-    {
-       public static Error AccountNotFoundError => new(nameof(AccountNotFoundError), "No account was found for the specified id");
-    }
+    public static Error AccountNotFoundError => new(nameof(AccountNotFoundError), "No account was found for the specified id");
+
 }

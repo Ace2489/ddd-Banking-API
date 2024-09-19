@@ -14,4 +14,15 @@ public record Money
     }
 
     public static Money operator +(Money first, Money second) => first with { Value = second.Value + first.Value };
+
+    public static bool operator <(Money first, Money second) => first.Value < second.Value;
+
+    public static bool operator >(Money first, Money second) => first.Value > second.Value;
+    public static Result<Money> Subtract(Money minuend, Money subtrahend)
+    {
+        if (minuend < subtrahend) return DomainErrors.Money.NegativeMoneyError;
+        return minuend with { Value = minuend.Value - subtrahend.Value };
+    }
+
+
 }

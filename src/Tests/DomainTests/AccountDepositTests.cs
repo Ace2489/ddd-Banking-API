@@ -1,7 +1,5 @@
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Shared;
-using Domain.ValueObjects;
 
 namespace Tests.DomainTests;
 
@@ -9,15 +7,15 @@ public class AccountDepositTests
 {
 
     [Fact]
-    public void Deposit_WithPositiveAmount_IncreasesAccountBalance()
+    public void Deposit_IncreasesAccountBalance()
     {
-        Money positiveDeposit = Money.Create(1000m).Value!;
+        Money deposit = Money.Create(1000m).Value!;
         Guid userId = Guid.NewGuid();
         Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings, Money.Create(1000m).Value!);
         Money initialBalance = account.Balance;
-        Money finalBalance = initialBalance + positiveDeposit;
+        Money finalBalance = initialBalance + deposit;
 
-        Result<Account> result = account.Deposit(positiveDeposit, DateTimeOffset.UtcNow);
+        Result<Account> result = account.Deposit(deposit, DateTimeOffset.UtcNow);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(finalBalance, result.Value!.Balance);
