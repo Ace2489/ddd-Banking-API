@@ -3,6 +3,7 @@ using Application.Features.Withdrawal;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Deposit;
 
@@ -14,6 +15,7 @@ public class BankController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
+    [Authorize]
     [HttpPost("deposit")]
     public async Task<ActionResult> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
     {
@@ -37,7 +39,7 @@ public class BankController(ISender sender) : ControllerBase
         Result<WithdrawalCommand> commandResult = WithdrawalCommand.Create(request.AccountId, request.Amount);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
-
+                    
         Result<Account> withdrawalResult = await sender.Send(commandResult.Value, cancellationToken);
 
         if (withdrawalResult.IsSuccess) return Ok(withdrawalResult.Value);

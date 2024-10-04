@@ -1,6 +1,5 @@
 using Application.Features.Withdrawal;
 using Domain.Errors;
-using Domain.ValueObjects;
 using FluentAssertions;
 
 namespace Tests.ApplicationTests.Withdrawal;

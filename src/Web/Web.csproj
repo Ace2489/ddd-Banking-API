@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="mediatr" Version="12.4.1" />
+    <PackageReference Include="Microsoft.aspnetcore.Authentication.jwtbearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
     <PackageReference Include="microsoft.entityframeworkcore.design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,4 +23,8 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tests" />
+  </ItemGroup>
+  
 </Project>

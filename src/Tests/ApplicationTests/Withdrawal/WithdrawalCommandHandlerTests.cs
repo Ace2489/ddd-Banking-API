@@ -4,7 +4,6 @@ using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repository;
-using Domain.ValueObjects;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -36,7 +35,7 @@ public class WithdrawalCommandHandlerTests
         //act
         var result = await commandHandler.Handle(command, default);
 
-        //assert
+        //assert    
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(account);
         account.Balance.Should().Be(Money.Subtract(initialBalance, withdrawalAmount).Value!);
