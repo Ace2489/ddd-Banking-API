@@ -1,15 +1,14 @@
 using Domain.Entities;
 using Infrastructure.Context;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Web.Models.Auth;
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthController(AppDbContext context) : ControllerBase
+public class AuthController(ILogger<AuthController> logger) : ControllerBase
 {
-    private readonly AppDbContext context = context;
 
     [HttpPost("register")]
     public Task<User> Register([FromBody] RegisterRequest request)

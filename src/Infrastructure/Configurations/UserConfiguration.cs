@@ -11,7 +11,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
         builder.Property(u => u.FirstName).HasMaxLength(100);
         builder.Property(u => u.LastName).HasMaxLength(100);
-        builder.Property(u => u.Email).HasMaxLength(255);
+        // builder.Property(u => u.Email).HasMaxLength(255);
         builder.Property(u => u.Phone).HasMaxLength(100);
+
+        builder.HasMany(u => u.Accounts)
+        .WithOne()
+        .HasForeignKey(a => a.UserId);
     }
 }

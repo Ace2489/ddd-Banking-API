@@ -22,7 +22,7 @@ public class AccountDepositTests
     }
 
     [Fact]
-    public void DepositWhenSuccessful_AddsRelevantTransactionEntry()
+    public void Deposit_WhenSuccessful_AddsRelevantTransactionEntry()
     {
         Guid userId = Guid.NewGuid();
         string accountNumber = "123456789";
