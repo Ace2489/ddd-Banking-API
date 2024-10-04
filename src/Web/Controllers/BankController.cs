@@ -15,9 +15,8 @@ public class BankController(ISender sender) : ControllerBase
 {
     private readonly ISender sender = sender;
 
-    [Authorize]
     [HttpPost("deposit")]
-    public async Task<ActionResult> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<Account>> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
     {
 
         Result<DepositCommand> commandResult = DepositCommand.Create(request.AccountId, request.Amount);
@@ -33,7 +32,7 @@ public class BankController(ISender sender) : ControllerBase
         return UnprocessableEntity(result.Error);
     }
 
-    [HttpPost("withdraw")]
+    [HttpPost("withdraw")]      
     public async Task<ActionResult<Account>> Withdraw([FromBody] WithdrawalRequest request, CancellationToken cancellationToken)
     {
         Result<WithdrawalCommand> commandResult = WithdrawalCommand.Create(request.AccountId, request.Amount);

@@ -23,14 +23,14 @@ public class FirstNameTests
     public void FirstName_WithTooLongInput_ShouldReturnError()
     {
         Randomizer r = new();
-        int characterLimit = 50;
+        int characterLimit = BaseName.MaxLength;
         string invalidFirstName = new(r.Chars(count: characterLimit + 1));
 
         Result<FirstName> result = FirstName.Create(invalidFirstName);
 
         result.IsFailure.Should().BeTrue();
 
-        result.Error!.Should().Be(DomainErrors.Name.BeyondMaxLimitError);
+        result.Error!.Should().Be(DomainErrors.Name.MaxCharacterInputError);
     }
 
     [Theory]

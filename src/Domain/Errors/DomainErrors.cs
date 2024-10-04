@@ -17,7 +17,14 @@ public static class DomainErrors
 
     public static class Name
     {
-        public static Error BeyondMaxLimitError => new("Name.MaxCharacterError", "Name cannot be greater than 50 characters");                
-        public static Error EmptyInputError => new("Name.EmptyInputError", "Name must be a non-empty string");                
+        public static Error MaxCharacterInputError => new("Name.MaxCharacterError", $"Name cannot be greater than {ValueObjects.BaseName.MaxLength} characters");
+        public static Error EmptyInputError => new("Name.EmptyInputError", "Name must be a non-empty string");
+    }
+
+    public static class Email
+    {
+        public static Error EmptyInputError => new("Email.EmptyInputError", "Email must be a non-empty string");
+
+        public static Error MaxCharacterInputError => new("Email.MaxCharacterError", $"The email is too long. Maximum length is {ValueObjects.Email.MaxLength} characters");
     }
 }
