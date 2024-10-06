@@ -17,9 +17,8 @@ public class DepositCommandHandlerTests
         var accountId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var depositAmount = Money.Create(1000m).Value!;
-        var accountNumber = "12345";
 
-        var account = new Account(accountId, userId, accountNumber, AccountType.Savings, Money.Create(1000m).Value!);
+        var account = Account.Create(accountId, userId, AccountType.Savings).Value!;
         DepositCommand depositCommand = DepositCommand.Create(accountId, depositAmount);
         var accountRepository = Substitute.For<IAccountRepository>();
         accountRepository.GetAsync(accountId).Returns(account);

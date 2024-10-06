@@ -1,7 +1,7 @@
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Tests.DomainTests;
+namespace Tests.DomainTests.AccountTests;
 
 public class AccountDepositTests
 {
@@ -11,7 +11,9 @@ public class AccountDepositTests
     {
         Money deposit = Money.Create(1000m).Value!;
         Guid userId = Guid.NewGuid();
-        Account account = new(Guid.NewGuid(), userId, "22345", AccountType.Savings, Money.Create(1000m).Value!);
+        AccountType accountType = AccountType.Savings;
+
+        Account account = Account.Create(Guid.NewGuid(), userId, accountType).Value!;
         Money initialBalance = account.Balance;
         Money finalBalance = initialBalance + deposit;
 
@@ -25,18 +27,19 @@ public class AccountDepositTests
     public void Deposit_WhenSuccessful_AddsRelevantTransactionEntry()
     {
         Guid userId = Guid.NewGuid();
-        string accountNumber = "123456789";
-        Account account = new(Guid.NewGuid(), userId, accountNumber, AccountType.Savings, Money.Create(0).Value!);
+        Guid accountId = Guid.NewGuid();
+        AccountType accountType = AccountType.Savings;
+        Account account = Account.Create(accountId, userId, accountType).Value!;
+
         TransactionType transactionType = TransactionType.Deposit;
         DateTimeOffset transactionTime = DateTime.Now;
         var depositAmount = Money.Create(1000m).Value!;
 
         Result<Account> result = account.Deposit(depositAmount, transactionTime);
-        Account? returnedAccount = result.Value;
+        Account returnedAccount = result.Value!;
         Transaction transaction = account.Transactions.Single();
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(depositAmount, returnedAccount!.Balance);
         Assert.Single(returnedAccount.Transactions);
 
         Assert.Equal(depositAmount, transaction.Amount);

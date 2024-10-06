@@ -30,6 +30,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(u => u.Accounts)
         .WithOne()
-        .HasForeignKey(a => a.UserId);
+        .HasForeignKey(a => a.OwnerId);
     }
 }
