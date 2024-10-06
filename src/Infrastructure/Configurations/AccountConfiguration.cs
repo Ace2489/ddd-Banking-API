@@ -23,7 +23,7 @@ public class AccountConfiguration() : IEntityTypeConfiguration<Account>
 
         builder.HasOne<User>()
         .WithMany()
-        .HasForeignKey(a => a.UserId)
+        .HasForeignKey(a => a.OwnerId)
         .IsRequired();
 
         builder.HasMany(a => a.Transactions)

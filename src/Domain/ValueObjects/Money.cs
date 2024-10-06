@@ -18,6 +18,7 @@ public record Money
     public static bool operator <(Money first, Money second) => first.Value < second.Value;
 
     public static bool operator >(Money first, Money second) => first.Value > second.Value;
+
     public static Result<Money> Subtract(Money minuend, Money subtrahend)
     {
         if (minuend < subtrahend) return DomainErrors.Money.NegativeMoneyError;

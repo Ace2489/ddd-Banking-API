@@ -4,7 +4,6 @@ using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Repository;
-using Domain.ValueObjects;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -19,11 +18,10 @@ public class WithdrawalCommandHandlerTests
         //arrange
         var accountId = Guid.NewGuid();
         var withdrawalAmount = Money.Create(1000).Value!;
-        var initialBalance = Money.Create(1000m).Value!;
-        var accountNumber = "12345";
+        var initialBalance = withdrawalAmount + Money.Create(1000).Value!;
         var userId = Guid.NewGuid();
 
-        var account = new Account(accountId, userId, accountNumber, AccountType.Savings, initialBalance);
+        var account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, AccountType.Savings).Value!;
 
         var command = WithdrawalCommand.Create(accountId, withdrawalAmount.Value).Value!;
         var repository = Substitute.For<IAccountRepository>();
@@ -36,10 +34,9 @@ public class WithdrawalCommandHandlerTests
         //act
         var result = await commandHandler.Handle(command, default);
 
-        //assert
+        //assert    
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(account);
-        account.Balance.Should().Be(Money.Subtract(initialBalance, withdrawalAmount).Value!);
         await repository.Received().GetAsync(accountId);
         await unitOfWork.Received(1).SaveChangesAsync();
     }

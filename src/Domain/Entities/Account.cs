@@ -11,17 +11,17 @@ public class Account : Entity
 
     //For EF Core
     private Account() { }
-    public Account(Guid id, Guid userId, string accountNumber, AccountType accountType, Money initialBalance)
+    private Account(Guid id, Guid userId, string accountNumber, AccountType accountType, Money initialBalance)
         : base(id)
     {
-        UserId = userId;
+        OwnerId = userId;
         AccountNumber = accountNumber;
         Type = accountType;
         Balance = initialBalance;
         DateOpened = DateTimeOffset.UtcNow;
     }
 
-    public Guid UserId { get; private set; }
+    public Guid OwnerId { get; private set; }
     public string AccountNumber { get; private set; } = null!;
     public AccountType Type { get; private set; }
     public Money Balance { get; private set; } = null!;
@@ -45,5 +45,18 @@ public class Account : Entity
         Transaction transaction = new(Id, amount, null, transactionTime, TransactionType.Withdrawal);
         _transactions.Add(transaction);
         return this;
+    }
+
+    internal static Result<Account> Create(Guid accountId, Guid ownerId, AccountType accountType = AccountType.Savings)
+    {
+        Money initialBalance = Money.Create(0).Value!;
+        return new Account(accountId, ownerId, "accountNumber", accountType, initialBalance);
+    }
+
+    internal static Result<Account> CreateWithInitialBalance(Guid accountId, Guid ownerId, Money initialBalance, AccountType accountType = AccountType.Savings)
+    {
+        Account account = Create(accountId, ownerId, accountType).Value!;
+        account.Deposit(initialBalance, DateTimeOffset.UtcNow);
+        return account;
     }
 }
