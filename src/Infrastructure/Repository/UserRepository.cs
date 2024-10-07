@@ -9,9 +9,9 @@ public class UserRepository(AppDbContext context) : IUserRepository
 {
     private readonly AppDbContext context = context;
 
-    public Task<User?> AddAsync(User user, CancellationToken cancellationToken = default)
+    public async Task AddAsync(User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await context.AddAsync(user, cancellationToken);
     }
 
     public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default)

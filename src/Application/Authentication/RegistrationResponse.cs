@@ -1,5 +1,6 @@
-using Domain.Entities;
+
+using Application.Shared.Models;
 
 namespace Application.Authentication;
 
-public record RegistrationResponse(User User, string AccessToken);
+public record RegistrationResponse(UserResponse User, string AccessToken);

@@ -19,7 +19,8 @@ public class AuthController(ILogger<AuthController> logger, ISender sender) : Co
         Result<RegisterUserCommand> commandResult = RegisterUserCommand.Create(request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.DateOfBirth);
         if (commandResult.IsFailure) return UnprocessableEntity(commandResult.Error!);
         Result<RegistrationResponse> userResult = await sender.Send(commandResult.Value!);
-        return Ok(userResult.Value);
+        
+        return Created("api/v1/auth/me", userResult.Value);
     }
 }
 

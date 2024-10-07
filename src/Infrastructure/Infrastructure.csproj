@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.aspnetcore.authentication.jwtbearer" Version="8.0.8" />
     <PackageReference Include="microsoft.extensions.dependencyinjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.extensions.identity.core" Version="8.0.8" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />

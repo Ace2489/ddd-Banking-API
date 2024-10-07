@@ -1,15 +1,18 @@
 ﻿using System.Net.Http.Json;
-using Domain.Entities;
+using Application;
+using Application.Authentication;
+using Application.Shared.Models;
 using FluentAssertions;
-using Web.Models;
+using Infrastructure.Context;
+using NSubstitute;
 using Web.Models.Auth;
 
 namespace Tests.Integration;
 
 public class AuthControllerTests
 {
-    [Fact(Skip = "Need other tests first")]
-    public async Task Register_WithValidCredentials_ShouldReturnNewUser()
+    [Fact]
+    public async Task Register_WithValidCredentials_ShouldCreateAndReturnANewUser()
     {
         BankAppFactory application = new();
         string firstname = "First";
@@ -25,12 +28,15 @@ public class AuthControllerTests
 
         res.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
 
-        Response<User?>? response = await res.Content.ReadFromJsonAsync<Response<User?>>();
+        RegistrationResponse? response = await res.Content.ReadFromJsonAsync<RegistrationResponse>();
         response.Should().NotBeNull();
 
-        User? user = response!.Data!;
+        UserResponse user = response!.User;
         user.FirstName.Should().Be(firstname);
         user.LastName.Should().Be(lastName);
-        // user.Email.Should().Be(email);
+        user.Email.Should().Be(email);
+        user.Phone.Should().Be(phone);
+
+        Console.WriteLine("THE ACCESS TOKEN IS " + response.AccessToken);
     }
 }

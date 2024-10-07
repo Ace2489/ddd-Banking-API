@@ -9,5 +9,5 @@ public interface IUserRepository
 
     public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default);
 
-    public Task<User?> AddAsync(User user, CancellationToken cancellationToken = default);
+    public Task AddAsync(User user, CancellationToken cancellationToken = default);
 }

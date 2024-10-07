@@ -18,6 +18,8 @@ internal class BankAppFactory : WebApplicationFactory<Program>
             string? connectionString = GetConnectionString();
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+            services.AddNpgsql<AppDbContext>(connectionString);
+
             IServiceProvider provider = services.BuildServiceProvider();
             IServiceScope scope = provider.CreateScope();
             AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();

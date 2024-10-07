@@ -1,6 +1,8 @@
+using Application;
 using Application.Authentication;
 using Application.IRepository;
 using Application.Shared;
+using Application.Shared.Models;
 using Domain.Entities;
 using Domain.ValueObjects.Name;
 using FluentAssertions;
@@ -20,22 +22,28 @@ public class RegisterUserCommandHandlerTest
         string phone = "phone";
         string password = "password";
 
+        //substitutes
         var userRepository = Substitute.For<IUserRepository>();
         userRepository.FindByEmail(email).Returns((User)null!);
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync().Returns(1);
         var authService = Substitute.For<IAuthenticationService>();
+
         RegisterUserCommand command = RegisterUserCommand.Create(firstName.Name, lastName.Name, email.Mail, password, phone, dateOfBirth).Value!;
 
-        var handler = new RegisterUserCommandHandler(userRepository, authService);
+        var handler = new RegisterUserCommandHandler(userRepository, authService, unitOfWork);
         var result = await handler.Handle(command, default);
 
         result.IsSuccess.Should().BeTrue();
-        User user = result.Value!.User;
+        UserResponse user = result.Value!.User;
 
-        user.FirstName.Should().Be(firstName);
-        user.LastName.Should().Be(lastName);
-        user.Email.Should().Be(email);
+        user.FirstName.Should().Be(firstName.Name);
+        user.LastName.Should().Be(lastName.Name);
+        user.Email.Should().Be(email.Mail);
         user.Phone.Should().Be(phone);
         user.DateOfBirth.Should().Be(dateOfBirth);
+
+        await unitOfWork.Received(1).SaveChangesAsync();
     }
 
     [Fact]
@@ -50,14 +58,18 @@ public class RegisterUserCommandHandlerTest
         string password = "unhashed password";
         string hashedPassword = "A hashed password lol";
 
+        //subs
         var userRepository = Substitute.For<IUserRepository>();
         userRepository.FindByEmail(email).Returns((User)null!);
         var authService = Substitute.For<IAuthenticationService>();
         authService.HashPassword(password).Returns(hashedPassword);
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync().Returns(1);
+
         RegisterUserCommand command = RegisterUserCommand.Create(firstName.Name, lastName.Name, email.Mail, password, phone, dateOfBirth).Value!;
 
 
-        var handler = new RegisterUserCommandHandler(userRepository, authService);
+        var handler = new RegisterUserCommandHandler(userRepository, authService, unitOfWork);
         var result = await handler.Handle(command, default);
 
         result.Value!.User.PasswordHash.Should().NotBe(password);
@@ -80,11 +92,14 @@ public class RegisterUserCommandHandlerTest
         var userRepository = Substitute.For<IUserRepository>();
         userRepository.FindByEmail(email).Returns(user);
         var authService = Substitute.For<IAuthenticationService>();
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync().Returns(1);
+
 
         RegisterUserCommand command = RegisterUserCommand.Create(firstName.Name, lastName.Name, email.Mail, password, phone, dateOfBirth).Value!;
 
 
-        var handler = new RegisterUserCommandHandler(userRepository, authService);
+        var handler = new RegisterUserCommandHandler(userRepository, authService, unitOfWork);
         var result = await handler.Handle(command, default);
 
         result.IsFailure.Should().BeTrue();
