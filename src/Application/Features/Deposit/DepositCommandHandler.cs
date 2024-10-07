@@ -1,6 +1,6 @@
+using Application.IRepository;
 using Application.Shared;
 using Domain.Entities;
-using Domain.Repository;
 using Domain.Shared;
 using MediatR;
 

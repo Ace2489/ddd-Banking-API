@@ -1,6 +1,10 @@
 ﻿using Application;
-using Domain.Repository;
+using Application.IRepository;
+using Application.Shared;
 using Infrastructure.Context;
+using Infrastructure.Repository;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +18,15 @@ public static class Configure
         string? connectionString = configuration["ConnectionStrings__PG_String"];
         services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(connectionString));
 
-        services.AddScoped<IAccountRepository, AccountRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services
+        .AddScoped<IAccountRepository, AccountRepository>()
+        .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services
+        .AddScoped<IAuthenticationService, AuthenticationService>()
+        .AddScoped<IPasswordHasher<object>, PasswordHasher<object>>();
+
         return services;
     }
 }

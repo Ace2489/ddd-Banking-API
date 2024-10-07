@@ -2,7 +2,7 @@
 
 public abstract class Entity
 {
-    protected Entity() {}
+    protected Entity() { }
     protected Entity(Guid Id)
     {
         this.Id = Id;

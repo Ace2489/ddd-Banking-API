@@ -1,10 +1,10 @@
 using Application;
 using Application.Features.Deposit;
+using Application.IRepository;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Repository;
-using Domain.ValueObjects;
+
 using FluentAssertions;
 using NSubstitute;
 namespace Tests.ApplicationTests.Deposit;

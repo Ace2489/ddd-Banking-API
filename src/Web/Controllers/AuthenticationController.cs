@@ -1,6 +1,7 @@
+using Application.Authentication;
 using Domain.Entities;
-using Infrastructure.Context;
-using Microsoft.AspNetCore.Identity;
+using Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Auth;
 
@@ -8,14 +9,18 @@ namespace Web.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthController(ILogger<AuthController> logger, IPasswordHasher<User> passwordHasher) : ControllerBase
+public class AuthController(ILogger<AuthController> logger, ISender sender) : ControllerBase
 {
-    private readonly IPasswordHasher<User> passwordHasher = passwordHasher;
+    private readonly ILogger<AuthController> logger = logger;
+    private readonly ISender sender = sender;
 
     [HttpPost("register")]
-    public Task<User> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult> Register([FromBody] RegisterRequest request)
     {
-        throw new NotImplementedException();
+        Result<RegisterUserCommand> commandResult = RegisterUserCommand.Create(request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.DateOfBirth);
+        if (commandResult.IsFailure) return UnprocessableEntity(commandResult.Error!);
+        Result<RegistrationResponse> userResult = await sender.Send(commandResult.Value!);
+        return Ok(userResult);
     }
 }
 

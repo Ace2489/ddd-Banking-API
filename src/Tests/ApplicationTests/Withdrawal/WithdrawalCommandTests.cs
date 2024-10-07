@@ -20,7 +20,7 @@ public class WithdrawalCommandTests
         result.Value!.Amount.Should().Be(Money.Create(amount).Value);
     }
 
-    [Fact]  
+    [Fact]
     public void Create_WithNegativeAmount_ShouldFail()
     {
         var accountId = Guid.NewGuid();
@@ -30,6 +30,6 @@ public class WithdrawalCommandTests
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().Be(DomainErrors.Money.NegativeMoneyError);
-        
+
     }
 }

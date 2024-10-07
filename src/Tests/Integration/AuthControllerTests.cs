@@ -16,8 +16,9 @@ public class AuthControllerTests
         string lastName = "last";
         string email = "email@email";
         string password = "password";
+        string phone = "phone";
 
-        RegisterRequest registerRequest = new(firstname, lastName, email, password, DateTimeOffset.UtcNow);
+        RegisterRequest registerRequest = new(firstname, lastName, email, password, phone, DateTimeOffset.UtcNow);
         HttpClient client = application.CreateClient();
 
         HttpResponseMessage res = await client.PostAsJsonAsync("/api/v1/auth/register", registerRequest);
