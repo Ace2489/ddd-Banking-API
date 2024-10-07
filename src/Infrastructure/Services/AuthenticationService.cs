@@ -20,7 +20,7 @@ public class AuthenticationService(IPasswordHasher<object> passwordHasher, IConf
         List<Claim> claims =
         [
             new(ClaimTypes.NameIdentifier, userId.ToString()),
-            new (ClaimTypes.Name, email.Mail)
+            new(ClaimTypes.Name, email.Mail)
         ];
 
         string? keyString = configuration.GetSection("Jwt:Secret").Value;

@@ -1,5 +1,5 @@
 using Application;
-using Application.Authentication;
+using Application.Auth.Register;
 using Application.IRepository;
 using Application.Shared;
 using Application.Shared.Models;
@@ -8,7 +8,7 @@ using Domain.ValueObjects.Name;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Tests.ApplicationTests.Auth;
+namespace Tests.ApplicationTests.Auth.Register;
 
 public class RegisterUserCommandHandlerTest
 {
@@ -95,9 +95,7 @@ public class RegisterUserCommandHandlerTest
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
-
         RegisterUserCommand command = RegisterUserCommand.Create(firstName.Name, lastName.Name, email.Mail, password, phone, dateOfBirth).Value!;
-
 
         var handler = new RegisterUserCommandHandler(userRepository, authService, unitOfWork);
         var result = await handler.Handle(command, default);

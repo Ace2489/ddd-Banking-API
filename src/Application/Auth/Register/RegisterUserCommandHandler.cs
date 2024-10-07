@@ -5,7 +5,7 @@ using Domain.Entities;
 using Domain.Shared;
 using MediatR;
 
-namespace Application.Authentication;
+namespace Application.Auth.Register;
 
 public class RegisterUserCommandHandler(IUserRepository userRepository, IAuthenticationService authService, IUnitOfWork unitOfWork) : IRequestHandler<RegisterUserCommand, Result<RegistrationResponse>>
 {

@@ -1,10 +1,9 @@
-using Application.Authentication;
+using Application.Auth.Register;
 using Application.Shared;
 using Domain.Errors;
-using Domain.ValueObjects.Name;
 using FluentAssertions;
 
-namespace Tests.ApplicationTests.Auth;
+namespace Tests.ApplicationTests.Auth.Register;
 
 public class RegisterUserCommandTest
 {

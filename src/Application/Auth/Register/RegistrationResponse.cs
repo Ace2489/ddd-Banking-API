@@ -1,6 +1,6 @@
 
 using Application.Shared.Models;
 
-namespace Application.Authentication;
+namespace Application.Auth.Register;
 
 public record RegistrationResponse(UserResponse User, string AccessToken);

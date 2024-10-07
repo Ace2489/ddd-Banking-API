@@ -40,7 +40,7 @@ public class AccountTest
         account.OwnerId.Should().Be(ownerId);
         account.Type.Should().Be(accountType);
         account.Balance.Should().Be(initialBalance);
-        
+
         Transaction depositTransaction = account.Transactions.Single();
 
         depositTransaction.AccountId.Should().Be(accountId);

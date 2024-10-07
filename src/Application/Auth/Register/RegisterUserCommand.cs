@@ -1,11 +1,10 @@
 using Application.Shared;
-using Domain.Entities;
 using Domain.Shared;
 using Domain.ValueObjects;
 using Domain.ValueObjects.Name;
 using MediatR;
 
-namespace Application.Authentication;
+namespace Application.Auth.Register;
 
 public sealed record RegisterUserCommand : IRequest<Result<RegistrationResponse>>
 {

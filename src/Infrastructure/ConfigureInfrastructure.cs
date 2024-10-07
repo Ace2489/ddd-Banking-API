@@ -16,7 +16,7 @@ public static class Configure
     public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string? connectionString = configuration["ConnectionStrings__PG_String"];
-        services.AddNpgsql<AppDbContext>(connectionString); 
+        services.AddNpgsql<AppDbContext>(connectionString);
 
         services
         .AddScoped<IAccountRepository, AccountRepository>()
