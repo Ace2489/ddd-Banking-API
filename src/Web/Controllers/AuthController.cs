@@ -1,5 +1,4 @@
 using Application.Authentication;
-using Domain.Entities;
 using Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,7 @@ public class AuthController(ILogger<AuthController> logger, ISender sender) : Co
         Result<RegisterUserCommand> commandResult = RegisterUserCommand.Create(request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.DateOfBirth);
         if (commandResult.IsFailure) return UnprocessableEntity(commandResult.Error!);
         Result<RegistrationResponse> userResult = await sender.Send(commandResult.Value!);
-        return Ok(userResult);
+        return Ok(userResult.Value);
     }
 }
 

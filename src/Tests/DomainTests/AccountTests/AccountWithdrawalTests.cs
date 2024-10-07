@@ -37,7 +37,7 @@ public class AccountWithdrawalTests
         result.IsSuccess.Should().BeTrue();
         Transaction transaction = account.Transactions[1]; //Initial deposit adds one transaction entry
         transaction.Amount.Should().Be(withdrawalAmount);
-        transaction.TransactionType.Should().Be(TransactionType.Withdrawal);
+        transaction.TransactionType.Should().Be(TransactionType.Credit);
         transaction.Timestamp.Should().Be(transactionTime);
     }
 

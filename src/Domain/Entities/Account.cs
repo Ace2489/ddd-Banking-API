@@ -32,7 +32,7 @@ public class Account : Entity
     public Result<Account> Deposit(Money deposit, DateTimeOffset transactionTime)
     {
         Balance += deposit;
-        _transactions.Add(new(Id, deposit, null, transactionTime, TransactionType.Deposit));
+        _transactions.Add(new(Id, deposit, null, transactionTime, TransactionType.Debit));
 
         return Result<Account>.Success(this);
     }
@@ -42,7 +42,7 @@ public class Account : Entity
         if (Balance < amount) return DomainErrors.Account.InsufficientFundsError;
 
         Balance = Money.Subtract(Balance, amount).Value!;
-        Transaction transaction = new(Id, amount, null, transactionTime, TransactionType.Withdrawal);
+        Transaction transaction = new(Id, amount, null, transactionTime, TransactionType.Credit);
         _transactions.Add(transaction);
         return this;
     }

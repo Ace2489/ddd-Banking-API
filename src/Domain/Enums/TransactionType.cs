@@ -2,7 +2,7 @@ namespace Domain.Enums;
 
 public enum TransactionType
 {
-    Deposit,
-    Withdrawal,
+    Debit,
+    Credit,
     Transfer
 }
