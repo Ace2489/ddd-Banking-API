@@ -19,13 +19,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.LastName)
         .HasConversion(n => n.Name, ln => LastName.Create(ln).Value!)
         .HasMaxLength(100);
-        
+
         builder.Property(u => u.Email)
         .HasConversion(em => em.Mail, em => Email.Create(em).Value!)
         .HasMaxLength(255);
-        
+
         builder.Property(u => u.Phone).HasMaxLength(100);
-        
+
         builder.HasIndex(u => u.Email).IsUnique();
 
         builder.HasMany(u => u.Accounts)

@@ -39,4 +39,15 @@ public class EmailTests
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.Email.MaxCharacterInputError);
     }
+
+    [Fact]
+    public void Create_WithInvalidEmail_ShouldReturnError()
+    {
+        string invalidEmail = "email"; // no @
+
+        var result = Email.Create(invalidEmail);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(DomainErrors.Email.InvalidEmailError);
+    }
 }

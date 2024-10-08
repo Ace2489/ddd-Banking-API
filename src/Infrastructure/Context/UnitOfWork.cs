@@ -3,7 +3,7 @@ using Application;
 
 namespace Infrastructure.Context;
 
-public class UnitOfWork(AppDbContext context):IUnitOfWork
+public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
     private readonly AppDbContext context = context;
 

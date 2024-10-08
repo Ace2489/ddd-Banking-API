@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;
+using NSubstitute;
 
 namespace Tests.DomainTests.AccountTests;
 
@@ -32,7 +33,6 @@ public class AccountTest
         Money initialBalance = Money.Create(1000).Value!;
 
         var accountResult = Account.CreateWithInitialBalance(accountId, ownerId, initialBalance, accountType);
-
         accountResult.Value.Should().NotBeNull();
 
         Account account = accountResult.Value!;
@@ -40,5 +40,9 @@ public class AccountTest
         account.OwnerId.Should().Be(ownerId);
         account.Type.Should().Be(accountType);
         account.Balance.Should().Be(initialBalance);
+
+        Transaction depositTransaction = account.Transactions.Single();
+
+        depositTransaction.AccountId.Should().Be(accountId);
     }
 }

@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Domain.Repository;
+namespace Application.IRepository;
 
 public interface IAccountRepository
 {

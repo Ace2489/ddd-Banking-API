@@ -1,9 +1,9 @@
 using Application;
 using Application.Features.Withdrawal;
+using Application.IRepository;
 using Application.Shared;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Repository;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;

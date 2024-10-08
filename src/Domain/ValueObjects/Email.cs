@@ -17,6 +17,7 @@ public sealed record Email
     {
         if (string.IsNullOrWhiteSpace(email)) return DomainErrors.Email.EmptyInputError;
         if (email.Length > maxLength) return DomainErrors.Email.MaxCharacterInputError;
+        if (!email.Contains('@')) return DomainErrors.Email.InvalidEmailError;
         return new Email(email);
     }
 }

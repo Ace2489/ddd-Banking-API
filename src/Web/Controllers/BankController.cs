@@ -9,6 +9,7 @@ using Web.Models.Deposit;
 
 namespace Web.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class BankController(ISender sender) : ControllerBase
@@ -32,13 +33,13 @@ public class BankController(ISender sender) : ControllerBase
         return UnprocessableEntity(result.Error);
     }
 
-    [HttpPost("withdraw")]      
+    [HttpPost("withdraw")]
     public async Task<ActionResult<Account>> Withdraw([FromBody] WithdrawalRequest request, CancellationToken cancellationToken)
     {
         Result<WithdrawalCommand> commandResult = WithdrawalCommand.Create(request.AccountId, request.Amount);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
-                    
+
         Result<Account> withdrawalResult = await sender.Send(commandResult.Value, cancellationToken);
 
         if (withdrawalResult.IsSuccess) return Ok(withdrawalResult.Value);

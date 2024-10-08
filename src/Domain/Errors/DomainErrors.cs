@@ -26,5 +26,7 @@ public static class DomainErrors
         public static Error EmptyInputError => new("Email.EmptyInputError", "Email must be a non-empty string");
 
         public static Error MaxCharacterInputError => new("Email.MaxCharacterError", $"The email is too long. Maximum length is {ValueObjects.Email.MaxLength} characters");
+
+        public static Error InvalidEmailError => new("Email.InvalidEmailError", "The provided email does not conform to valid email format");
     }
 }

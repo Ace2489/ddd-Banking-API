@@ -31,7 +31,7 @@ public class AccountDepositTests
         AccountType accountType = AccountType.Savings;
         Account account = Account.Create(accountId, userId, accountType).Value!;
 
-        TransactionType transactionType = TransactionType.Deposit;
+        TransactionType transactionType = TransactionType.Debit;
         DateTimeOffset transactionTime = DateTime.Now;
         var depositAmount = Money.Create(1000m).Value!;
 
