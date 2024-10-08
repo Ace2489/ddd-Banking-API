@@ -1,3 +1,4 @@
+using Application.Auth.Login;
 using Application.Auth.Register;
 using Domain.Shared;
 using MediatR;
@@ -20,13 +21,18 @@ public class AuthController(ILogger<AuthController> logger, ISender sender) : Co
         if (commandResult.IsFailure) return UnprocessableEntity(commandResult.Error!);
         Result<RegistrationResponse> userResult = await sender.Send(commandResult.Value!);
 
-        return Created("api/v1/auth/me", userResult.Value);
+        return userResult.IsSuccess ? Created("api/v1/auth/me", userResult.Value) : UnprocessableEntity(userResult.Error);
+
     }
 
     [HttpPost("login")]
-    public Task<ActionResult> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult> Login([FromBody] LoginRequest request)
     {
-        throw new NotImplementedException();
+        Result<LoginCommand> commandResult = LoginCommand.Create(request.Email, request.Password);
+        if (commandResult.IsFailure) return UnprocessableEntity(commandResult.Error);
+
+        Result<LoginResponse> loginResult = await sender.Send(commandResult.Value!);
+        return loginResult.IsSuccess ? Ok(loginResult.Value) : BadRequest(loginResult.Error);
     }
 }
 

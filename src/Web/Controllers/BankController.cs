@@ -9,6 +9,7 @@ using Web.Models.Deposit;
 
 namespace Web.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class BankController(ISender sender) : ControllerBase

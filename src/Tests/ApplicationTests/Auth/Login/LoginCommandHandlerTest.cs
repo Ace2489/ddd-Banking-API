@@ -32,16 +32,16 @@ public class LoginCommandHandlerTest
         var authService = Substitute.For<IAuthenticationService>();
         authService.VerifyPassword(passwordHash, password).Returns(true);
 
-        // When
         var command = LoginCommand.Create(email.Mail, password).Value!;
         var handler = new LoginCommandHandler(userRepository, authService);
         Result<LoginResponse> loginResponse = await handler.Handle(command, default);
 
-        // Then
+        
         loginResponse.IsSuccess.Should().BeTrue();
         UserResponse loggedInUser = loginResponse.Value!.User;
-
         loggedInUser.Should().BeEquivalentTo((UserResponse)testUser!);
+
+        await authService.Received(1).GenerateTokenAsync(testUser!.Id, testUser.Email);
 
     }
 
