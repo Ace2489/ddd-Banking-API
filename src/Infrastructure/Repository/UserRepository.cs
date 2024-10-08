@@ -2,6 +2,7 @@ using Application.IRepository;
 using Domain.Entities;
 using Domain.ValueObjects;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository;
 
@@ -14,9 +15,12 @@ public class UserRepository(AppDbContext context) : IUserRepository
         await context.AddAsync(user, cancellationToken);
     }
 
-    public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default)
+    public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default, bool relatedEntities = false)
     {
-        return Task.FromResult(context.Users.Where(u => u.Email == email).FirstOrDefault());
+        User? user = relatedEntities 
+            ? context.Users.Where(u => u.Email == email).Include(u=>u.Accounts).FirstOrDefault()
+            : context.Users.Where(u => u.Email == email).FirstOrDefault(); 
+        return Task.FromResult(user);
     }
 
     public Task<User?> GetAsync(Guid userId, CancellationToken cancellationToken = default)
