@@ -50,7 +50,7 @@ public class Account : Entity
     internal static Result<Account> Create(Guid accountId, Guid ownerId, AccountType accountType = AccountType.Savings)
     {
         Money initialBalance = Money.Create(0).Value!;
-        return new Account(accountId, ownerId, "accountNumber", accountType, initialBalance);
+        return new Account(accountId, ownerId, GetRandomString(10), accountType, initialBalance);
     }
 
     internal static Result<Account> CreateWithInitialBalance(Guid accountId, Guid ownerId, Money initialBalance, AccountType accountType = AccountType.Savings)
@@ -58,5 +58,13 @@ public class Account : Entity
         Account account = Create(accountId, ownerId, accountType).Value!;
         account.Deposit(initialBalance, DateTimeOffset.UtcNow);
         return account;
+    }
+
+    private static string GetRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new();
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

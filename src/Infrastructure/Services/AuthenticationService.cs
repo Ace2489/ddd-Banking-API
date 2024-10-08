@@ -40,7 +40,6 @@ public class AuthenticationService(IPasswordHasher<object> passwordHasher, IConf
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         string tokenString = tokenHandler.WriteToken(token);
 
-        logger.LogInformation("The generated token is {Token}", tokenString);
         return Task.FromResult(tokenString);
     }
 

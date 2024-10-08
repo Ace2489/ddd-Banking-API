@@ -15,7 +15,7 @@ public class LoginCommandHandler(IUserRepository userRepository, IAuthentication
 
     public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        User? existingUser = await userRepository.FindByEmail(request.Email, cancellationToken);
+        User? existingUser = await userRepository.FindByEmail(request.Email, cancellationToken, true);
         if (existingUser is null) return ApplicationErrors.AccountNotFoundError;
         bool verifiedPassword = await authService.VerifyPassword(existingUser.PasswordHash, request.Password);
         if (verifiedPassword != true) return ApplicationErrors.AccountNotFoundError;
