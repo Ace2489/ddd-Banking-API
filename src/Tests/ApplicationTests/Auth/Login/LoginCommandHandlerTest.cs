@@ -36,7 +36,7 @@ public class LoginCommandHandlerTest
         var handler = new LoginCommandHandler(userRepository, authService);
         Result<LoginResponse> loginResponse = await handler.Handle(command, default);
 
-        
+
         loginResponse.IsSuccess.Should().BeTrue();
         UserResponse loggedInUser = loginResponse.Value!.User;
         loggedInUser.Should().BeEquivalentTo((UserResponse)testUser!);

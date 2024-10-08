@@ -20,7 +20,7 @@ public class LoginCommandTest
     }
 
     [Fact]
-        public void Create_WithInvalidData_ReturnsError()
+    public void Create_WithInvalidData_ReturnsError()
     {
         string invalidEmail = "email";
         string password = "password";
