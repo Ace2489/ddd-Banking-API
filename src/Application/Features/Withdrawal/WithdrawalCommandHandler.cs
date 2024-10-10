@@ -13,7 +13,7 @@ public class WithdrawalCommandHandler(IAccountRepository accountRepository, IUni
 
     public async Task<Result<Account>> Handle(WithdrawalCommand request, CancellationToken cancellationToken)
     {
-        Account? account = await accountRepository.GetAsync(request.AccountId, cancellationToken);
+        Account? account = await accountRepository.GetWithTransactionsAsync(request.AccountId, cancellationToken);
 
         if (account is null) return ApplicationErrors.AccountNotFoundError;
 

@@ -14,7 +14,7 @@ public class HistoryCommandHandler(IAccountRepository repository) : IRequestHand
 
     public async Task<Result<IEnumerable<TransactionResponse>>> Handle(HistoryCommand request, CancellationToken cancellationToken)
     {
-        Account? account = await repository.GetAsync(request.AccountId, cancellationToken);
+        Account? account = await repository.GetWithTransactionsAsync(request.AccountId, cancellationToken);
         if (account is null) return ApplicationErrors.AccountNotFoundError;
         var transactionResponses = account.History(request.Period).Select(t => (TransactionResponse)t);
         return Result<IEnumerable<TransactionResponse>>.Success(transactionResponses);

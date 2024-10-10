@@ -21,7 +21,7 @@ public class DepositCommandHandlerTests
         var account = Account.Create(accountId, userId, AccountType.Savings).Value!;
         DepositCommand depositCommand = DepositCommand.Create(accountId, depositAmount, userId).Value!;
         var accountRepository = Substitute.For<IAccountRepository>();
-        accountRepository.GetAsync(accountId).Returns(account);
+        accountRepository.GetWithTransactionsAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
@@ -43,7 +43,7 @@ public class DepositCommandHandlerTests
         var handler = new DepositCommandHandler(repository, unitOfWork);
         var userId = Guid.NewGuid();
         var depositAmount = 1000;
-        repository.GetAsync(accountId).Returns((Account)null!);
+        repository.GetWithTransactionsAsync(accountId).Returns((Account)null!);
 
         var result = await handler.Handle(DepositCommand.Create(accountId, depositAmount, userId).Value!, default);
 
@@ -65,7 +65,7 @@ public class DepositCommandHandlerTests
 
         var command = DepositCommand.Create(accountId, withdrawalAmount.Value, userId).Value!;
         var repository = Substitute.For<IAccountRepository>();
-        repository.GetAsync(accountId).Returns(account);
+        repository.GetWithTransactionsAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
@@ -77,6 +77,6 @@ public class DepositCommandHandlerTests
         //assert    
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(ApplicationErrors.UserNotAccountOwnerError);
-        await repository.Received().GetAsync(accountId);
+        await repository.Received().GetWithTransactionsAsync(accountId);
     }
 }

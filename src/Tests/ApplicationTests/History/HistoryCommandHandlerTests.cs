@@ -26,7 +26,7 @@ public class HistoryCommandHandlerTests
 
         HistoryCommand command = HistoryCommand.Create(Data.Start, Data.End, accountId).Value!;
         IAccountRepository accountRepository = Substitute.For<IAccountRepository>();
-        accountRepository.GetAsync(accountId).Returns(account);
+        accountRepository.GetWithTransactionsAsync(accountId).Returns(account);
 
         HistoryCommandHandler commandHandler = new(accountRepository);
         Result<IEnumerable<TransactionResponse>> historyResult = await commandHandler.Handle(command, default);
@@ -43,7 +43,7 @@ public class HistoryCommandHandlerTests
         Guid accountId = Guid.NewGuid();
         HistoryCommand command = HistoryCommand.Create(Data.Start, Data.End, accountId).Value!;
         IAccountRepository accountRepository = Substitute.For<IAccountRepository>();
-        accountRepository.GetAsync(accountId).Returns((Account)null!);
+        accountRepository.GetWithTransactionsAsync(accountId).Returns((Account)null!);
 
         HistoryCommandHandler commandHandler = new(accountRepository);
         Result<IEnumerable<TransactionResponse>> historyResult = await commandHandler.Handle(command, default);

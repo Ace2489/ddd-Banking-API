@@ -25,7 +25,7 @@ public class WithdrawalCommandHandlerTests
 
         var command = WithdrawalCommand.Create(accountId, withdrawalAmount.Value, userId).Value!;
         var repository = Substitute.For<IAccountRepository>();
-        repository.GetAsync(accountId).Returns(account);
+        repository.GetWithTransactionsAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
@@ -37,7 +37,7 @@ public class WithdrawalCommandHandlerTests
         //assert    
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(account);
-        await repository.Received().GetAsync(accountId);
+        await repository.Received().GetWithTransactionsAsync(accountId);
         await unitOfWork.Received(1).SaveChangesAsync();
     }
 
@@ -48,7 +48,7 @@ public class WithdrawalCommandHandlerTests
         var repository = Substitute.For<IAccountRepository>();
         var unitOfWork = Substitute.For<IUnitOfWork>();
         var handler = new WithdrawalCommandHandler(repository, unitOfWork);
-        repository.GetAsync(accountId).Returns((Account)null!);
+        repository.GetWithTransactionsAsync(accountId).Returns((Account)null!);
 
         var result = await handler.Handle(WithdrawalCommand.Create(accountId, 1000, Guid.NewGuid()).Value!, default);
 
@@ -70,7 +70,7 @@ public class WithdrawalCommandHandlerTests
 
         var command = WithdrawalCommand.Create(accountId, withdrawalAmount.Value, userId).Value!;
         var repository = Substitute.For<IAccountRepository>();
-        repository.GetAsync(accountId).Returns(account);
+        repository.GetWithTransactionsAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
 
@@ -82,6 +82,6 @@ public class WithdrawalCommandHandlerTests
         //assert    
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(ApplicationErrors.UserNotAccountOwnerError);
-        await repository.Received().GetAsync(accountId);
+        await repository.Received().GetWithTransactionsAsync(accountId);
     }
 }
