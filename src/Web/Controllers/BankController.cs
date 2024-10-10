@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Application.Features.Deposit;
 using Application.Features.History;
+using Application.Features.Info;
 using Application.Features.Withdrawal;
 using Application.Shared.Models;
 using Domain.Entities;
@@ -68,5 +69,17 @@ public class BankController(ISender sender) : ControllerBase
         if (historyResult.IsSuccess) return Ok(historyResult.Value);
 
         return UnprocessableEntity(historyResult.Error);
+    }
+
+    [HttpGet("info")]
+    public async Task<ActionResult> Info([FromQuery] InfoRequest request, CancellationToken cancellationToken)
+    {
+        InfoCommand command = new(request.AccountId, request.UserId);
+
+        Result<AccountResponse> accountResult = await sender.Send(command);
+
+        if (accountResult.IsSuccess) return Ok(accountResult.Value);
+
+        return UnprocessableEntity(accountResult.Error);
     }
 }
