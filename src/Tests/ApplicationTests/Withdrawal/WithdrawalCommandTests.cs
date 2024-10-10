@@ -11,8 +11,9 @@ public class WithdrawalCommandTests
     {
         var accountId = Guid.NewGuid();
         decimal amount = 100m;
+        var userId = Guid.NewGuid();
 
-        var result = WithdrawalCommand.Create(accountId, amount);
+        var result = WithdrawalCommand.Create(accountId, amount, userId);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
@@ -26,8 +27,9 @@ public class WithdrawalCommandTests
         var accountId = Guid.NewGuid();
         decimal amount = -100m;
 
-        var result = WithdrawalCommand.Create(accountId, amount);
+        var userId = Guid.NewGuid();
 
+        var result = WithdrawalCommand.Create(accountId, amount, userId);
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().Be(DomainErrors.Money.NegativeMoneyError);
 

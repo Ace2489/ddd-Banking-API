@@ -8,6 +8,7 @@ using Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Extensions;
 using Web.Models;
 using Web.Models.Deposit;
 using Web.Models.Withdrawal;
@@ -24,8 +25,9 @@ public class BankController(ISender sender) : ControllerBase
     [HttpPost("deposit")]
     public async Task<ActionResult<Account>> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
     {
-
-        Result<DepositCommand> commandResult = DepositCommand.Create(request.AccountId, request.Amount);
+        Guid userId = this.GetLoggedInUser();
+        
+        Result<DepositCommand> commandResult = DepositCommand.Create(request.AccountId, request.Amount, userId);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
 
@@ -41,7 +43,9 @@ public class BankController(ISender sender) : ControllerBase
     [HttpPost("withdraw")]
     public async Task<ActionResult<Account>> Withdraw([FromBody] WithdrawalRequest request, CancellationToken cancellationToken)
     {
-        Result<WithdrawalCommand> commandResult = WithdrawalCommand.Create(request.AccountId, request.Amount);
+        Guid userId = this.GetLoggedInUser();
+
+        Result<WithdrawalCommand> commandResult = WithdrawalCommand.Create(request.AccountId, request.Amount, userId);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
 

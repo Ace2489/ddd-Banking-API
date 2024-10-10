@@ -17,6 +17,8 @@ public class DepositCommandHandler(IAccountRepository accountRepository, IUnitOf
 
         if (account is null) return ApplicationErrors.AccountNotFoundError;
 
+        if (account.OwnerId != request.UserId) return ApplicationErrors.UserNotAccountOwnerError;
+
         Result<Account> depositResult = account.Deposit(request.Amount, DateTimeOffset.UtcNow);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

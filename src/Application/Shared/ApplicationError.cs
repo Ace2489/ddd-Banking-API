@@ -10,4 +10,6 @@ public static class ApplicationErrors
 
     public static Error InvalidUserDetailsError => new($"User.{nameof(InvalidUserDetailsError)}", "No user exists for the provided details");
 
+    public static Error UserNotAccountOwnerError => new($"User.{nameof(UserNotAccountOwnerError)}", "You are not the owner of this account");
+
 }

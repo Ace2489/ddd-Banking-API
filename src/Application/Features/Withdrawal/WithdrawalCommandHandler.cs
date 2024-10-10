@@ -17,6 +17,8 @@ public class WithdrawalCommandHandler(IAccountRepository accountRepository, IUni
 
         if (account is null) return ApplicationErrors.AccountNotFoundError;
 
+        if (account.OwnerId != request.UserId) return ApplicationErrors.UserNotAccountOwnerError;
+
         Result<Account> withdrawalResult = account.Withdraw(request.Amount, DateTimeOffset.UtcNow);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
