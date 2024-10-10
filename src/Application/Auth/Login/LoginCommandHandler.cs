@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Application.IRepository;
 using Application.Shared;
 using Application.Shared.Models;
@@ -15,10 +14,10 @@ public class LoginCommandHandler(IUserRepository userRepository, IAuthentication
 
     public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        User? existingUser = await userRepository.FindByEmail(request.Email, cancellationToken, true);
-        if (existingUser is null) return ApplicationErrors.AccountNotFoundError;
+        User? existingUser = await userRepository.FindByEmailAsync(request.Email, true, cancellationToken);
+        if (existingUser is null) return ApplicationErrors.InvalidUserDetailsError;
         bool verifiedPassword = await authService.VerifyPassword(existingUser.PasswordHash, request.Password);
-        if (verifiedPassword != true) return ApplicationErrors.AccountNotFoundError;
+        if (verifiedPassword != true) return ApplicationErrors.InvalidUserDetailsError;
 
         return new LoginResponse((UserResponse)existingUser, await authService.GenerateTokenAsync(existingUser.Id, existingUser.Email));
     }

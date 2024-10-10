@@ -1,12 +1,17 @@
+using System.Text.Json;
 using Application.Features.Deposit;
+using Application.Features.History;
 using Application.Features.Withdrawal;
+using Application.Shared.Models;
 using Domain.Entities;
 using Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Extensions;
+using Web.Models;
 using Web.Models.Deposit;
+using Web.Models.Withdrawal;
 
 namespace Web.Controllers;
 
@@ -21,7 +26,7 @@ public class BankController(ISender sender) : ControllerBase
     public async Task<ActionResult<Account>> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
     {
         Guid userId = this.GetLoggedInUser();
-        
+
         Result<DepositCommand> commandResult = DepositCommand.Create(request.AccountId, request.Amount, userId);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
@@ -51,4 +56,17 @@ public class BankController(ISender sender) : ControllerBase
         return UnprocessableEntity(withdrawalResult.Error);
     }
 
+    [HttpPost("history")]
+    public async Task<ActionResult> History([FromBody] HistoryRequest request, CancellationToken token)
+    {
+        Result<HistoryCommand> commandResult = HistoryCommand.Create(request.Start, request.End, request.AccountId);
+
+        if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);
+
+        Result<IEnumerable<TransactionResponse>> historyResult = await sender.Send(commandResult.Value, token);
+
+        if (historyResult.IsSuccess) return Ok(historyResult.Value);
+
+        return UnprocessableEntity(historyResult.Error);
+    }
 }

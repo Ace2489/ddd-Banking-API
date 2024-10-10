@@ -7,7 +7,7 @@ public interface IUserRepository
 {
     public Task<User?> GetAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default, bool relatedEntities = false);
+    public Task<User?> FindByEmailAsync(Email email, bool relatedEntities = false, CancellationToken cancellationToken = default);
 
     public Task AddAsync(User user, CancellationToken cancellationToken = default);
 }

@@ -1,7 +1,6 @@
 using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;
-using NSubstitute;
 
 namespace Tests.DomainTests.AccountTests;
 
@@ -32,7 +31,7 @@ public class AccountTest
         AccountType accountType = AccountType.Checking;
         Money initialBalance = Money.Create(1000).Value!;
 
-        var accountResult = Account.CreateWithInitialBalance(accountId, ownerId, initialBalance, accountType);
+        var accountResult = Account.CreateWithInitialBalance(accountId, ownerId, initialBalance, DateTimeOffset.UtcNow, accountType);
         accountResult.Value.Should().NotBeNull();
 
         Account account = accountResult.Value!;

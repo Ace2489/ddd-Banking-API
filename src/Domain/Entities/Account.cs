@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using System.Collections.ObjectModel;
+using Domain.Enums;
 using Domain.Errors;
 using Domain.Shared;
 using Domain.ValueObjects;
@@ -47,16 +48,20 @@ public class Account : Entity
         return this;
     }
 
+    public IReadOnlyCollection<Transaction> History(DateTimePeriod period)
+    {
+        return Transactions.Where(t => period.Contains(t.Timestamp)).ToList();
+    }
     internal static Result<Account> Create(Guid accountId, Guid ownerId, AccountType accountType = AccountType.Savings)
     {
         Money initialBalance = Money.Create(0).Value!;
         return new Account(accountId, ownerId, GetRandomString(10), accountType, initialBalance);
     }
 
-    internal static Result<Account> CreateWithInitialBalance(Guid accountId, Guid ownerId, Money initialBalance, AccountType accountType = AccountType.Savings)
+    internal static Result<Account> CreateWithInitialBalance(Guid accountId, Guid ownerId, Money initialBalance, DateTimeOffset timestamp, AccountType accountType = AccountType.Savings)
     {
         Account account = Create(accountId, ownerId, accountType).Value!;
-        account.Deposit(initialBalance, DateTimeOffset.UtcNow);
+        account.Deposit(initialBalance, timestamp);
         return account;
     }
 

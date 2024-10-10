@@ -52,7 +52,7 @@ public class DepositCommandHandlerTests
         await unitOfWork.DidNotReceive().SaveChangesAsync();
     }
 
-        [Fact]
+    [Fact]
     public async void Handle_WithUnownedAccount_ShouldFail()
     {
         //arrange
@@ -61,9 +61,9 @@ public class DepositCommandHandlerTests
         var initialBalance = withdrawalAmount + Money.Create(1000).Value!;
         var userId = Guid.NewGuid();
 
-        var account = Account.CreateWithInitialBalance(accountId, Guid.NewGuid(), initialBalance, AccountType.Savings).Value!;
+        var account = Account.CreateWithInitialBalance(accountId, Guid.NewGuid(), initialBalance, DateTimeOffset.UtcNow, AccountType.Savings).Value!;
 
-        var command = DepositCommand.Create(accountId, withdrawalAmount.Value, Guid.NewGuid()).Value!;
+        var command = DepositCommand.Create(accountId, withdrawalAmount.Value, userId).Value!;
         var repository = Substitute.For<IAccountRepository>();
         repository.GetAsync(accountId).Returns(account);
         var unitOfWork = Substitute.For<IUnitOfWork>();

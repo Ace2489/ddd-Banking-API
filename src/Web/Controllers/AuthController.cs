@@ -9,12 +9,12 @@ namespace Web.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthController(ILogger<AuthController> logger, ISender sender) : ControllerBase
+public class AuthController(ISender sender) : ControllerBase
 {
-    private readonly ILogger<AuthController> logger = logger;
     private readonly ISender sender = sender;
 
     [HttpPost("register")]
+    [ProducesResponseType(typeof(RegistrationResponse), StatusCodes.Status201Created)]
     public async Task<ActionResult> Register([FromBody] RegisterRequest request)
     {
         Result<RegisterUserCommand> commandResult = RegisterUserCommand.Create(request.FirstName, request.LastName, request.Email, request.Password, request.Phone, request.DateOfBirth);
@@ -26,6 +26,7 @@ public class AuthController(ILogger<AuthController> logger, ISender sender) : Co
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult> Login([FromBody] LoginRequest request)
     {
         Result<LoginCommand> commandResult = LoginCommand.Create(request.Email, request.Password);

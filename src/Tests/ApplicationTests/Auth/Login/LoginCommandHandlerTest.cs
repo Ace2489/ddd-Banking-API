@@ -26,7 +26,7 @@ public class LoginCommandHandlerTest
 
         //substitutes
         var userRepository = Substitute.For<IUserRepository>();
-        userRepository.FindByEmail(email).Returns(testUser);
+        userRepository.FindByEmailAsync(email, true, default).Returns(testUser);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
         var authService = Substitute.For<IAuthenticationService>();
@@ -52,7 +52,7 @@ public class LoginCommandHandlerTest
         string password = "password";
         //substitutes
         var userRepository = Substitute.For<IUserRepository>();
-        userRepository.FindByEmail(email).Returns((User)null!);
+        userRepository.FindByEmailAsync(email).Returns((User)null!);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
         var authService = Substitute.For<IAuthenticationService>();
@@ -62,6 +62,6 @@ public class LoginCommandHandlerTest
         Result<LoginResponse> loginResponse = await handler.Handle(command, default);
 
         loginResponse.IsFailure.Should().BeTrue();
-        loginResponse.Error!.Should().Be(ApplicationErrors.AccountNotFoundError);
+        loginResponse.Error!.Should().Be(ApplicationErrors.InvalidUserDetailsError);
     }
 }

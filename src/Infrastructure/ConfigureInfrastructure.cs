@@ -46,6 +46,7 @@ public static class Configure
                 ValidateAudience = false
             };
         });
+        services.AddAuthorization();
         services
         .AddScoped<IAuthenticationService, AuthenticationService>()
         .AddScoped<IPasswordHasher<object>, PasswordHasher<object>>();

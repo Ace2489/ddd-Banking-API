@@ -8,10 +8,4 @@ public interface IAuthenticationService
     Task<string> HashPassword(string password);
     Task<bool> VerifyPassword(string hashedPassword, string providedPassword);
 }
-//REgistering a user
-/*
-- Get credentials
-- verify they do not exist
-- hash password and create the user with hash
-- store hash
-*/
+

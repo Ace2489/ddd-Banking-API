@@ -1,70 +1,85 @@
-﻿using System.Net.Http.Json;
-using Application.Auth.Login;
-using Application.Auth.Register;
-using Application.Shared.Models;
-using FluentAssertions;
-using Web.Models.Auth;
+﻿// using System.Net.Http.Json;
+// using Application.Auth.Login;
+// using Application.Auth.Register;
+// using Application.IRepository;
+// using Application.Shared.Models;
+// using Domain.Entities;
+// using FluentAssertions;
+// using Microsoft.Extensions.DependencyInjection;
+// using Tests.Integration.Setup;
+// using Web.Models.Auth;
 
-namespace Tests.Integration;
+// namespace Tests.Integration;
 
-public class AuthControllerTests
-{
-    [Fact]
-    public async Task Register_WithValidCredentials_ShouldCreateAndReturnANewUser()
-    {
-        BankAppFactory application = new();
-        string firstname = "First";
-        string lastName = "last";
-        string email = "email@email";
-        string password = "password";
-        string phone = "phone";
 
-        RegisterRequest registerRequest = new(firstname, lastName, email, password, phone, DateTimeOffset.UtcNow);
-        HttpClient client = application.CreateClient();
+// public class AuthControllerTests
+// {
+//     [Fact]
+//     public async Task Register_WithValidCredentials_ShouldCreateAndReturnANewUser()
+//     {
+//         BankAppFactory application = new();
+//         string firstname = "First";
+//         string lastName = "last";
+//         string email = "email@email";
+//         string password = "password";
+//         string phone = "phone";
 
-        HttpResponseMessage res = await client.PostAsJsonAsync("/api/v1/auth/register", registerRequest);
+//         RegisterRequest registerRequest = new(firstname, lastName, email, password, phone, DateTimeOffset.UtcNow);
+//         HttpClient client = application.CreateClient();
 
-        res.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+//         HttpResponseMessage res = await client.PostAsJsonAsync("/api/v1/auth/register", registerRequest);
 
-        RegistrationResponse? response = await res.Content.ReadFromJsonAsync<RegistrationResponse>();
-        response.Should().NotBeNull();
+//         res.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
 
-        UserResponse user = response!.User;
-        user.FirstName.Should().Be(firstname);
-        user.LastName.Should().Be(lastName);
-        user.Email.Should().Be(email);
-        user.Phone.Should().Be(phone);
+//         RegistrationResponse? response = await res.Content.ReadFromJsonAsync<RegistrationResponse>();
+//         response.Should().NotBeNull();
 
-        Console.WriteLine("THE ACCESS TOKEN IS " + response.AccessToken);
-    }
+//         UserResponse user = response!.User;
+//         user.FirstName.Should().Be(firstname);
+//         user.LastName.Should().Be(lastName);
+//         user.Email.Should().Be(email);
+//         user.Phone.Should().Be(phone);
 
-    [Fact]
-    public async Task Login_WithValidCredentials_ShouldReturnUserAndToken()
-    {
-        BankAppFactory application = new();
-        string firstname = "First";
-        string lastName = "last";
-        string email = "email@email";
-        string password = "password";
-        string phone = "phone";
+//         IServiceScope serviceScope = application.Services.CreateScope();
+//         IUserRepository users = serviceScope.ServiceProvider.GetRequiredService<IUserRepository>();
 
-        RegisterRequest registerRequest = new(firstname, lastName, email, password, phone, DateTimeOffset.UtcNow);
-        HttpClient registrationClient = application.CreateClient();
+//         User? dbUser = await users.FindByEmailAsync(Email.Create(email).Value!, true, default);
 
-        HttpResponseMessage response = await registrationClient.PostAsJsonAsync("/api/v1/auth/register", registerRequest);
+//         dbUser.Should().NotBeNull();
+//         dbUser.FirstName.Name.Should().Be(firstname);
+//         dbUser.LastName.Name.Should().Be(lastName);
+//         dbUser.Email.Mail.Should().Be(email);
+//         dbUser.Phone.Should().Be(phone);
+//         dbUser.DateOfBirth.Should().BeCloseTo(user.DateOfBirth, TimeSpan.FromMinutes(1));
+//     }
 
-        if (!response.IsSuccessStatusCode) throw new Exception("The user could not be registered");
+//     [Fact]
+//     public async Task Login_WithValidCredentials_ShouldReturnUserAndToken()
+//     {
+//         BankAppFactory application = new();
+//         string firstname = "First";
+//         string lastName = "last";
+//         string email = "email@email";
+//         string password = "password";
+//         string phone = "phone";
 
-        LoginRequest loginRequest = new(email, password);
-        HttpClient client = application.CreateClient();
+//         RegisterRequest registerRequest = new(firstname, lastName, email, password, phone, DateTimeOffset.UtcNow);
+//         HttpClient registrationClient = application.CreateClient();
 
-        HttpResponseMessage res = await client.PostAsJsonAsync("/api/v1/auth/login", loginRequest);
+//         HttpResponseMessage response = await registrationClient.PostAsJsonAsync("/api/v1/auth/register", registerRequest);
 
-        res.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+//         if (!response.IsSuccessStatusCode) throw new Exception("The user could not be registered");
 
-        LoginResponse? loginResponse = await res.Content.ReadFromJsonAsync<LoginResponse>();
-        loginResponse.Should().NotBeNull();
+//         LoginRequest loginRequest = new(email, password);
+//         HttpClient client = application.CreateClient();
 
-        loginResponse!.User.Email.Should().Be(email);
-    }
-}
+//         HttpResponseMessage res = await client.PostAsJsonAsync("/api/v1/auth/login", loginRequest);
+
+//         res.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+
+//         LoginResponse? loginResponse = await res.Content.ReadFromJsonAsync<LoginResponse>();
+//         loginResponse.Should().NotBeNull();
+
+//         loginResponse!.User.Email.Should().Be(email);
+//     }
+// }

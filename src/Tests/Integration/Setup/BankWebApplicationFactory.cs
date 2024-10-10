@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Context;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-namespace Tests.Integration;
+namespace Tests.Integration.Setup;
 
 internal class BankAppFactory : WebApplicationFactory<Program>
 {
@@ -14,17 +15,26 @@ internal class BankAppFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureTestServices(services =>
         {
+            //Switch the db to a test db
             services.RemoveAll(typeof(DbContextOptions<AppDbContext>));
             string? connectionString = GetConnectionString();
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
             services.AddNpgsql<AppDbContext>(connectionString);
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "TestScheme";
+                options.DefaultChallengeScheme = "TestScheme";
+                options.DefaultScheme = "TestScheme";
+            }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
+
+
+            //Make sure we start with a fresh test db
             IServiceProvider provider = services.BuildServiceProvider();
             IServiceScope scope = provider.CreateScope();
             AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
             context.Database.EnsureDeleted();
+
         });
     }
 
