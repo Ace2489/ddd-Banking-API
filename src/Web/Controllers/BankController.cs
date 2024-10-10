@@ -72,11 +72,12 @@ public class BankController(ISender sender) : ControllerBase
     }
 
     [HttpGet("info")]
+    [ProducesResponseType<AccountResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult> Info([FromQuery] InfoRequest request, CancellationToken cancellationToken)
     {
-        InfoCommand command = new(request.AccountId, request.UserId);
-
-        Result<AccountResponse> accountResult = await sender.Send(command);
+        Guid userId = this.GetLoggedInUser();
+        InfoCommand command = new(request.AccountId, userId);
+        Result<AccountResponse> accountResult = await sender.Send(command, cancellationToken);
 
         if (accountResult.IsSuccess) return Ok(accountResult.Value);
 

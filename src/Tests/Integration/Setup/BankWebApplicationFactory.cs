@@ -43,4 +43,7 @@ internal class BankAppFactory : WebApplicationFactory<Program>
         IConfiguration configuration = new ConfigurationBuilder().AddUserSecrets<BankAppFactory>().Build();
         return configuration["ConnectionStrings__PG_String"];
     }
+
+    private static Guid _guid = Guid.NewGuid();
+    public static Guid UserId => _guid; 
 }
