@@ -24,7 +24,7 @@ public class RegisterUserCommandHandlerTest
 
         //substitutes
         var userRepository = Substitute.For<IUserRepository>();
-        userRepository.FindByEmail(email).Returns((User)null!);
+        userRepository.FindByEmailAsync(email).Returns((User)null!);
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);
         var authService = Substitute.For<IAuthenticationService>();
@@ -60,7 +60,7 @@ public class RegisterUserCommandHandlerTest
 
         //subs
         var userRepository = Substitute.For<IUserRepository>();
-        userRepository.FindByEmail(email).Returns((User)null!);
+        userRepository.FindByEmailAsync(email).Returns((User)null!);
         var authService = Substitute.For<IAuthenticationService>();
         authService.HashPassword(password).Returns(hashedPassword);
         var unitOfWork = Substitute.For<IUnitOfWork>();
@@ -90,7 +90,7 @@ public class RegisterUserCommandHandlerTest
         User user = User.Create(Guid.NewGuid(), firstName, lastName, email, phone, dateOfBirth, password).Value!; //only here for the return
 
         var userRepository = Substitute.For<IUserRepository>();
-        userRepository.FindByEmail(email).Returns(user);
+        userRepository.FindByEmailAsync(email).Returns(user);
         var authService = Substitute.For<IAuthenticationService>();
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync().Returns(1);

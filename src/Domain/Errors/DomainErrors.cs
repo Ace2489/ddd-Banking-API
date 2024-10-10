@@ -29,4 +29,9 @@ public static class DomainErrors
 
         public static Error InvalidEmailError => new("Email.InvalidEmailError", "The provided email does not conform to valid email format");
     }
+
+    public static class DateTimePeriod
+    {
+        public static Error NegativePeriodError => new($"{nameof(DateTimePeriod)}.{nameof(NegativePeriodError)}", "The start datetime must be less than the end datetime");
+    }
 }

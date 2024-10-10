@@ -24,6 +24,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasConversion(em => em.Mail, em => Email.Create(em).Value!)
         .HasMaxLength(255);
 
+        builder.Property(u=>u.DateOfBirth);
         builder.Property(u => u.Phone).HasMaxLength(100);
 
         builder.HasIndex(u => u.Email).IsUnique();

@@ -15,11 +15,11 @@ public class UserRepository(AppDbContext context) : IUserRepository
         await context.AddAsync(user, cancellationToken);
     }
 
-    public Task<User?> FindByEmail(Email email, CancellationToken cancellationToken = default, bool relatedEntities = false)
+    public Task<User?> FindByEmailAsync(Email email, bool relatedEntities = false, CancellationToken cancellationToken = default)
     {
-        User? user = relatedEntities 
-            ? context.Users.Where(u => u.Email == email).Include(u=>u.Accounts).FirstOrDefault()
-            : context.Users.Where(u => u.Email == email).FirstOrDefault(); 
+        User? user = relatedEntities
+            ? context.Users.Where(u => u.Email == email).Include(u => u.Accounts).FirstOrDefault()
+            : context.Users.Where(u => u.Email == email).FirstOrDefault();
         return Task.FromResult(user);
     }
 

@@ -1,11 +1,15 @@
 ﻿using System.Net.Http.Json;
 using Application.Auth.Login;
 using Application.Auth.Register;
+using Application.IRepository;
 using Application.Shared.Models;
+using Domain.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Web.Models.Auth;
 
 namespace Tests.Integration;
+
 
 public class AuthControllerTests
 {
@@ -35,7 +39,17 @@ public class AuthControllerTests
         user.Email.Should().Be(email);
         user.Phone.Should().Be(phone);
 
-        Console.WriteLine("THE ACCESS TOKEN IS " + response.AccessToken);
+        IServiceScope serviceScope = application.Services.CreateScope();
+        IUserRepository users = serviceScope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+        User? dbUser = await users.FindByEmailAsync(Email.Create(email).Value!, true, default);
+
+        dbUser.Should().NotBeNull();
+        dbUser.FirstName.Name.Should().Be(firstname);
+        dbUser.LastName.Name.Should().Be(lastName);
+        dbUser.Email.Mail.Should().Be(email);
+        dbUser.Phone.Should().Be(phone);
+        dbUser.DateOfBirth.Should().BeCloseTo(user.DateOfBirth, TimeSpan.FromMinutes(1));
     }
 
     [Fact]

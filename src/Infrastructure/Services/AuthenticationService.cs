@@ -5,12 +5,11 @@ using Application.Shared;
 using Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services;
 
-public class AuthenticationService(IPasswordHasher<object> passwordHasher, IConfiguration configuration, ILogger<AuthenticationService> logger) : IAuthenticationService
+public class AuthenticationService(IPasswordHasher<object> passwordHasher, IConfiguration configuration) : IAuthenticationService
 {
     private readonly IPasswordHasher<object> passwordHasher = passwordHasher; //asp.net identity doesn't actually use the user object when hashing
     private readonly IConfiguration configuration = configuration;
@@ -46,11 +45,6 @@ public class AuthenticationService(IPasswordHasher<object> passwordHasher, IConf
     public Task<string> HashPassword(string password)
     {
         return Task.FromResult(passwordHasher.HashPassword(new { }, password));
-    }
-
-    public Task<bool> ValidateCredentialsAsync(Email email, string password)
-    {
-        throw new NotImplementedException();
     }
 
     public Task<bool> VerifyPassword(string hashedPassword, string providedPassword)

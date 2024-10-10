@@ -15,7 +15,7 @@ public class RegisterUserCommandHandler(IUserRepository userRepository, IAuthent
 
     public async Task<Result<RegistrationResponse>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        User? existingUser = await userRepository.FindByEmail(request.Email, cancellationToken);
+        User? existingUser = await userRepository.FindByEmailAsync(request.Email, false, cancellationToken);
 
         if (existingUser is not null) return ApplicationErrors.EmailAlreadyExistsError;
 
