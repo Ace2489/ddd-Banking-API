@@ -23,6 +23,6 @@ public record DateTimePeriod
 
     public bool Contains(DateTimeOffset dateTime)
     {
-        return Start < dateTime && End > dateTime;
+        return Start <= dateTime && End >= dateTime;
     }
 }

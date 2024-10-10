@@ -1,6 +1,7 @@
 using Application.Features.History;
 using Application.IRepository;
 using Application.Shared;
+using Application.Shared.Models;
 using Domain.Entities;
 using FluentAssertions;
 using NSubstitute;
@@ -28,9 +29,9 @@ public class HistoryCommandHandlerTests
         accountRepository.GetAsync(accountId).Returns(account);
 
         HistoryCommandHandler commandHandler = new(accountRepository);
-        Result<IReadOnlyCollection<Transaction>> historyResult = await commandHandler.Handle(command, default);
+        Result<IEnumerable<TransactionResponse>> historyResult = await commandHandler.Handle(command, default);
         historyResult.IsSuccess.Should().BeTrue();
-        Transaction tr = historyResult.Value!.Single();
+        TransactionResponse tr = historyResult.Value!.Single();
 
         tr.Timestamp.Should().BeOnOrAfter(Data.Start);
         tr.Timestamp.Should().BeOnOrBefore(Data.End);
@@ -45,7 +46,7 @@ public class HistoryCommandHandlerTests
         accountRepository.GetAsync(accountId).Returns((Account)null!);
 
         HistoryCommandHandler commandHandler = new(accountRepository);
-        Result<IReadOnlyCollection<Transaction>> historyResult = await commandHandler.Handle(command, default);
+        Result<IEnumerable<TransactionResponse>> historyResult = await commandHandler.Handle(command, default);
 
         historyResult.IsFailure.Should().BeTrue();
         historyResult.Error.Should().Be(ApplicationErrors.AccountNotFoundError);

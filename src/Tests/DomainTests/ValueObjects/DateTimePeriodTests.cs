@@ -45,8 +45,28 @@ public class DateTimePeriodTests
     {
         DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;
 
-        bool unContained = period.Contains(Data.End.AddDays(1));
+        bool contained = period.Contains(Data.End.AddDays(1));
 
-        unContained.Should().BeFalse();
+        contained.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Contains_WithEquivalentStart_ShouldReturnTrue()
+    {
+        DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;
+
+        bool contained = period.Contains(Data.Start);
+
+        contained.Should().BeTrue();
+    }
+
+        [Fact]
+    public void Contains_WithEquivalentEnd_ShouldReturnTrue()
+    {
+        DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;
+
+        bool contained = period.Contains(Data.End);
+
+        contained.Should().BeTrue();
     }
 }

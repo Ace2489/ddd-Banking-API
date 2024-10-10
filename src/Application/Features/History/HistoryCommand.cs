@@ -1,11 +1,11 @@
-using Domain.Entities;
+using Application.Shared.Models;
 using Domain.Shared;
 using Domain.ValueObjects;
 using MediatR;
 
 namespace Application.Features.History;
 
-public record HistoryCommand : IRequest<Result<IReadOnlyCollection<Transaction>>>
+public record HistoryCommand : IRequest<Result<IEnumerable<TransactionResponse>>>
 {
     public DateTimePeriod Period { get; }
 

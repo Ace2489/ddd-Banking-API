@@ -62,6 +62,6 @@ public class LoginCommandHandlerTest
         Result<LoginResponse> loginResponse = await handler.Handle(command, default);
 
         loginResponse.IsFailure.Should().BeTrue();
-        loginResponse.Error!.Should().Be(ApplicationErrors.AccountNotFoundError);
+        loginResponse.Error!.Should().Be(ApplicationErrors.InvalidUserDetailsError);
     }
 }

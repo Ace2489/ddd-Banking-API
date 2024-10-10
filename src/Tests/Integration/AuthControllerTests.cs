@@ -6,6 +6,7 @@
 // using Domain.Entities;
 // using FluentAssertions;
 // using Microsoft.Extensions.DependencyInjection;
+// using Tests.Integration.Setup;
 // using Web.Models.Auth;
 
 // namespace Tests.Integration;
