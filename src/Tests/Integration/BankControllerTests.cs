@@ -16,7 +16,7 @@ public class BankControllerTests
     public async void History_WithValidDates_ShouldReturnTransactions()
     {
         BankAppFactory application = new();
-        User user = GetUser();
+        User user = GetUser(BankAppFactory.UserId);
         Account account = InitialiseAccount(user);
         await PersistToDB(application, user);
 
@@ -40,13 +40,13 @@ public class BankControllerTests
     public async void Info_WithValidIds_ShouldReturnAccount()
     {
         BankAppFactory application = new();
-        User user = GetUser();
+        User user = GetUser(BankAppFactory.UserId);
         Account account = InitialiseAccount(user);
         await PersistToDB(application, user);
 
-        InfoRequest request = new(account.Id, user.Id);
+        InfoRequest request = new(account.Id);
         HttpClient client = application.CreateClient();
-        HttpResponseMessage res = await client.GetAsync($"/api/v1/bank/info?accountId={request.AccountId}&userId={request.UserId}");
+        HttpResponseMessage res = await client.GetAsync($"/api/v1/bank/info?accountId={request.AccountId}");
 
         res.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
@@ -55,9 +55,9 @@ public class BankControllerTests
         response.Should().Be((AccountResponse)account);
     }
 
-    private static User GetUser()
+    private static User GetUser(Guid Id)
     {
-        Guid userId = Guid.NewGuid();
+        Guid userId = Id;
         FirstName firstName = FirstName.Create("first").Value!;
         LastName lastName = LastName.Create("last").Value!;
         Email email = Email.Create("email@email").Value!;

@@ -11,7 +11,12 @@ public class TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> option
 {
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var identity = new ClaimsIdentity(Array.Empty<Claim>(), "test");
+        Claim[] claims =
+      [
+            new Claim(ClaimTypes.NameIdentifier, BankAppFactory.UserId.ToString()),
+            new Claim(ClaimTypes.Email, "testUser@email.com")
+        ];
+        var identity = new ClaimsIdentity(claims, "test");
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, "TestScheme");
 
