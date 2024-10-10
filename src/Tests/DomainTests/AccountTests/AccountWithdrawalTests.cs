@@ -15,7 +15,7 @@ public class AccountWithdrawalTests
         var withdrawalAmount = Money.Create(10m).Value!;
         var initialBalance = withdrawalAmount + Money.Create(100).Value!;
 
-        Account account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, AccountType.Checking).Value!;
+        Account account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, DateTimeOffset.UtcNow, AccountType.Checking).Value!;
         var result = account.Withdraw(withdrawalAmount, DateTimeOffset.UtcNow);
 
         result.IsSuccess.Should().BeTrue();
@@ -31,7 +31,7 @@ public class AccountWithdrawalTests
         var initialBalance = withdrawalAmount + Money.Create(10).Value!;
         DateTimeOffset transactionTime = DateTimeOffset.UtcNow;
 
-        Account account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, AccountType.Savings).Value!;
+        Account account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, DateTimeOffset.UtcNow, AccountType.Savings).Value!;
         var result = account.Withdraw(withdrawalAmount, transactionTime);
 
         result.IsSuccess.Should().BeTrue();
@@ -46,7 +46,7 @@ public class AccountWithdrawalTests
     {
         // Arrange
         var initialBalance = Money.Create(10).Value!;
-        var account = Account.CreateWithInitialBalance(Guid.NewGuid(), Guid.NewGuid(), initialBalance, AccountType.Checking).Value!;
+        var account = Account.CreateWithInitialBalance(Guid.NewGuid(), Guid.NewGuid(), initialBalance, DateTimeOffset.UtcNow, AccountType.Checking).Value!;
         var withdrawalAmount = Money.Create(1000).Value!;
 
         // Act

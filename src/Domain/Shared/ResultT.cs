@@ -1,7 +1,7 @@
 
 namespace Domain.Shared;
 
-public record Result<T> : Result
+public record Result<T> : Result 
 {
     protected private Result(bool isSuccess, T? value, Error? error = null) : base(isSuccess, error)
     {

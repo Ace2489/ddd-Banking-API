@@ -8,6 +8,7 @@ public class DateTimePeriodTests
     private static class Data
     {
         public static DateTimeOffset Start => new(new DateTime(2024, 10, 09));
+        public static DateTimeOffset ContainedPoint => new(new DateTime(2024, 10, 09, 20, 00, 00));
         public static DateTimeOffset End => new(new DateTime(2024, 10, 10));
     }
     [Fact]
@@ -23,9 +24,29 @@ public class DateTimePeriodTests
     [Fact]
     public void Create_WithInvalidPeriod_ShouldReturnError()
     {
-        Result<DateTimePeriod> period = DateTimePeriod.Create(Data.End, Data.Start);
+        Result<DateTimePeriod> periodResult = DateTimePeriod.Create(Data.End, Data.Start);
 
-        period.IsFailure.Should().BeTrue();
-        period.Error.Should().Be(DomainErrors.DateTimePeriod.NegativePeriodError);
+        periodResult.IsFailure.Should().BeTrue();
+        periodResult.Error.Should().Be(DomainErrors.DateTimePeriod.NegativePeriodError);
+    }
+
+    [Fact]
+    public void Contains_WithBoundedDateTime_ShouldReturnTrue()
+    {
+        DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;
+
+        bool contained = period.Contains(Data.ContainedPoint);
+
+        contained.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Contains_WithUnboundedDateTime_ShouldReturnFalse()
+    {
+        DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;
+
+        bool unContained = period.Contains(Data.End.AddDays(1));
+
+        unContained.Should().BeFalse();
     }
 }

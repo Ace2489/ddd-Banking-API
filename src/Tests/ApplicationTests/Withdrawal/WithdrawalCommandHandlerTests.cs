@@ -21,7 +21,7 @@ public class WithdrawalCommandHandlerTests
         var initialBalance = withdrawalAmount + Money.Create(1000).Value!;
         var userId = Guid.NewGuid();
 
-        var account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, AccountType.Savings).Value!;
+        var account = Account.CreateWithInitialBalance(accountId, userId, initialBalance, DateTimeOffset.UtcNow, AccountType.Savings).Value!;
 
         var command = WithdrawalCommand.Create(accountId, withdrawalAmount.Value).Value!;
         var repository = Substitute.For<IAccountRepository>();

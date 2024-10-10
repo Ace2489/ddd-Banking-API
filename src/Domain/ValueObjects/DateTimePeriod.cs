@@ -20,4 +20,9 @@ public record DateTimePeriod
         if (start > end) return DomainErrors.DateTimePeriod.NegativePeriodError;
         return new DateTimePeriod(start, end);
     }
+
+    public bool Contains(DateTimeOffset dateTime)
+    {
+        return Start < dateTime && End > dateTime;
+    }
 }
