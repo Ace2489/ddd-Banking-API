@@ -26,7 +26,7 @@ public class BankController(ISender sender) : ControllerBase
     public async Task<ActionResult<Account>> Deposit([FromBody] DepositRequest request, CancellationToken cancellationToken)
     {
         Guid userId = this.GetLoggedInUser();
-        
+
         Result<DepositCommand> commandResult = DepositCommand.Create(request.AccountId, request.Amount, userId);
 
         if (commandResult.Value is null) return UnprocessableEntity(commandResult.Error);

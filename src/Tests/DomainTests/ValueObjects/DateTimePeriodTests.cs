@@ -60,7 +60,7 @@ public class DateTimePeriodTests
         contained.Should().BeTrue();
     }
 
-        [Fact]
+    [Fact]
     public void Contains_WithEquivalentEnd_ShouldReturnTrue()
     {
         DateTimePeriod period = DateTimePeriod.Create(Data.Start, Data.End).Value!;

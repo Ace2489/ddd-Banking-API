@@ -52,7 +52,7 @@ public class DepositCommandHandlerTests
         await unitOfWork.DidNotReceive().SaveChangesAsync();
     }
 
-        [Fact]
+    [Fact]
     public async void Handle_WithUnownedAccount_ShouldFail()
     {
         //arrange
