@@ -8,8 +8,8 @@ public class HistoryTest
     [Fact]
     public void History_WithValidPeriod_ReturnsBoundedTransactions()
     {
-        DateTimeOffset start = new(new DateTime(2024, 10, 09));
-        DateTimeOffset end = new(new DateTime(2024, 10, 11));
+        DateTimeOffset start = DateTimeOffset.UtcNow.AddDays(-1);
+        DateTimeOffset end = DateTimeOffset.UtcNow.AddDays(1);
         Money initialBalance = Money.Create(1000).Value!;
 
         DateTimePeriod transactionPeriod = DateTimePeriod.Create(start, end).Value!;
