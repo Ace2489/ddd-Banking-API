@@ -16,6 +16,6 @@ public class AccountRepository(AppDbContext context) : IAccountRepository
 
     public async Task<Account?> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Accounts.FindAsync(id, cancellationToken);
+        return await context.Accounts.FindAsync([id], cancellationToken: cancellationToken);
     }
 }

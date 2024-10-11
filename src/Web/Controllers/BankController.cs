@@ -58,6 +58,7 @@ public class BankController(ISender sender) : ControllerBase
     }
 
     [HttpPost("history")]
+    [ProducesResponseType<IEnumerable<TransactionResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult> History([FromBody] HistoryRequest request, CancellationToken token)
     {
         Result<HistoryCommand> commandResult = HistoryCommand.Create(request.Start, request.End, request.AccountId);
